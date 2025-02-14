@@ -1,0 +1,100 @@
+# From non
+
+  1  hostnamectl set-hostname srv5
+    2  nmcli networking off
+    3  nmcli networking on
+    4  ping google.com
+    5  ifconfig
+    6  ip a
+    7  apt update
+    8  apt install git
+    9  git clone
+   10  git clone https://github.com/mmohamm5/Deployment-of-Open-radio-access-network.git
+   11  clear
+   12  ls
+   13  cd Deployment-of-Open-radio-access-network/
+   14  ls
+   15  chmod +x build_non.sh
+   16  ./build_non.sh
+   17  kubectl get po -A
+   18  ip -a
+   19  ip -i
+   20  kubectl get po -A
+   21  exit
+   22  kubectl get po -A
+   23  clear
+   24  kubectl get po -A
+   25  exit
+   26  kubectl get po -A
+   27  clear
+   28  kubectl get po -A
+   29  ls
+   30  kubectl get po -A
+   31  clear
+   32  kubectl get po -A
+   33  ls
+   34  cd Deployment-of-Open-radio-access-network/
+   35  ls
+   36  ./build_non.sh
+   37  kubectl get po -A
+   38  kubectl create namespace nonrtric
+   39  helm install --debug oran-nonrtric local/nonrtric --namespace nonrtric -f /root/dep/smo-install/helm-override/default/oran-override.yaml --set nonrtric.persistence.mountPath="/dockerdata-nfs/deployment-$timestamp"
+   40  kubectl get po -A
+   41  neartcd ..
+   42  cd ..
+   43  clear
+   44  ls
+   45  vim external_non.sh
+   46  ls
+   47  chmod +x external_non.sh
+   48  ls
+   49  kubectl get po -A
+   50  ./external_non.sh
+   51  kubectl get services -A
+   52  sudo kubectl exec -it --namespace nonrtric policymanagementservice-0 bash
+   53  kubectl get po -n nonrtric
+   54  helm ls --all --namespace onap --short | xargs -L1 helm delete
+   55  helm ls --all --namespace onap --short
+   56  kubectl create namespace onap
+   57  helm ls --all --namespace onap --short
+   58  bg
+   59  kubectl get pods -n onap
+   60  bg
+   61  kubectl get pods -n onap
+   62  fg
+   63  kubectl get pods -n onap
+   64  sudo kubectl exec -it --namespace nonrtric policymanagementservice-0 bash
+   65  kubectl get pods -n onap
+   66  sudo kubectl exec -it --namespace nonrtric onap-a1policymanagementservice-0 bash
+   67  sudo kubectl exec -it --namespace nonrtric onap-a1policymanagement-0 bash
+   68  sudo kubectl exec -it --namespace onap onap-a1policymanagement-0 bsh
+   69  sudo kubectl exec -it --namespace onap onap-a1policymanagement-0 bash
+   70  kubectl get pods -n onap
+   71  kubectl get services
+   72  htop
+   73  kubectl get services
+   74  sudo shutdown now
+   75  kubectl get services
+   76  kubectl get pods -n onap
+   77  kubectl get pods -A
+   78  htop
+   79  kubectl get pods -A
+   80  kubectl delet  onap-strimzi-zookeeper-0
+   81  kubectl delete  onap-strimzi-zookeeper-0
+   82  kubectl delete  onap-strimzi-zookeeper-0 -n onap
+   83  kubectl pod delete onap-strimzi-zookeeper-0 -n onap
+   84  kubectl delete onap-strimzi-zookeeper-0 -n onap
+   85  kubectl get pods -A
+   86  kubectl delete pods onap-aaf-sms-bb885df78-sqlwh -n onap
+   87  kubectl delete pods onap-dcae-ves-collector-6fcfc6c9d5-fjqkr -n onap
+   88  kubectl get pods -A
+   89  nano example_ploicy.json
+   90  curl -X PUT "http://139.6.19.30:10000/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @example_policy.json
+   91  apt install curl
+   92  curl -X PUT "http://139.6.19.30:10000/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @example_policy.json
+   93  mv example_ploicy.json example_policy.json
+   94  curl -X PUT "http://139.6.19.30:10000/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @example_policy.json
+   95  curl -X PUT "http://139.6.19.29:10000/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @example_policy.json
+   96  curl -X PUT "http://139.6.19.30:10000/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @example_policy.json
+   97  cat example_policy.json
+   98  history

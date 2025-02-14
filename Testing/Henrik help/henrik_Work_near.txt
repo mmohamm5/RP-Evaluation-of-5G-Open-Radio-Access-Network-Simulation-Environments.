@@ -1,0 +1,56 @@
+# near
+1  mkdir /home/o-ran/.ssh
+    2  nano /home/o-ran/.ssh/authorized_keys
+    3  rm /home/o-ran/.ssh/authorized_keys
+    4  su o-ran
+    5  clear
+    6  apt update && apt upgrade -y && apt autoremove -y && apt autoclean
+    7  clear
+    8  hostnamectl set-hostname srv6.5g.dn.th.koeln.de
+    9  apt install nmap net-tools vim nano htop
+   10  hostname
+   11  apt update && apt upgrade -y && apt autoremove -y && apt autoclean
+   12  apt install openssh-server -y
+   13  systemctl daemon reload
+   14  systemctl daemon-reload
+   15  systemctl enable --now ssh
+   16  systemctl status ssh
+   17  clear
+   18  apt get update
+   19  apt update
+   20  git clone https://github.com/mmohamm5/Deployment-of-Open-radio-access-network.git
+   21  apt install git
+   22  git clone https://github.com/mmohamm5/Deployment-of-Open-radio-access-network.git
+   23  ls
+   24  cd Deployment-of-Open-radio-access-network/
+   25  ls
+   26  clear
+   27  ls
+   28  chmod +x build_near.sh
+   29  ./build_near.sh
+   30  kubectl get po -A
+   31  sudo apt install xrdp
+   32  sudo systemctl enable --now xrdp
+   33  sudo ufw allow from any to any port 3389 proto tcp
+   34  clear
+   35  kubectl get po -A
+   36  ls
+   37  kubectl get po -A
+   38  clear
+   39  kubectl get po -A
+   40  kubectl patch svc "service-ricplt-a1mediator-http" -n "ricplt" -p '{"spec":{"externalIPs":["139.6.19.30"]}}'
+   41  kubectl get po -A
+   42  kubectl describe po -A
+   43  kubectl get services -A
+   44  vim external.sh
+   45  ls
+   46  chmod +x external.sh
+   47  ls
+   48  ./external.sh
+   49  vim external.sh
+   50  ls
+   51  clear
+   52  ls
+   53  ./external.sh
+   54  wireshark
+   55  history

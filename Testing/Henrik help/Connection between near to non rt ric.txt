@@ -1,0 +1,237 @@
+#Servers Password:        WYTxX8tghru4V!EX
+
+#connect near to non RT RIC
+
+git clone --recursive "https://gerrit.o-ran-sc.org/r/it/dep"
+
+./dep/smo-install/scripts/layer-1/1-build-all-charts.sh
+
+
+sudo kubectl exec -it --namespace nonrtric policymanagementservice-0 bash
+
+root@non-rt-ric:/home/o-ran# sudo vim /var/nonrtric/pms-storage/application_configuration.json
+
+
+# Edit this json file by following codes:
+
+
+{
+    "config": {
+      "controller": [
+        {
+          "name": "controller1",
+          "baseUrl": "https://sdnc.onap:8443",
+          "userName": "admin",
+          "password": "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"
+        }
+      ],
+      "ric": [
+        {
+          "name": "ric-testing",
+          "baseUrl": "http://$NONRTRIC_IP:10000",
+          "customAdapterClass": "org.onap.ccsdk.oran.a1policymanagementservice.clients.OscA1Client",
+          "managedElementIds": [
+            "kista_1",
+            "kista_2"
+          ]
+        }
+      ],
+      "streams_publishes": {
+        "dmaap_publisher": {
+          "type": "message_router",
+          "dmaap_info": {
+            "topic_url": "http://message-router:3904/events/A1-POLICY-AGENT-WRITE"
+          }
+        }
+      },
+      "streams_subscribes": {
+        "dmaap_subscriber": {
+          "type": "message_router",
+          "dmaap_info": {
+            "topic_url": "http://message-router:3904/events/A1-POLICY-AGENT-READ/users/policy-agent?timeout=15000&limit=100"
+          }
+        }
+      }
+    }
+  }
+
+
+
+# Now save this file and go to policy management service
+
+# Create policy in non-rt-ric
+vim policy_schema_ratecontrol.json
+#then copy this code and peste it above in json file
+
+{
+"name": "Policy for Rate Control",
+  "policy_type_id":21003,
+  "description":"This policy is associated with rate control. Entities which support this policy type must accept the 
+   following policy inputs (see the payload for more specifics) : class, which represents the class of traffic for which the policy is being enforced",
+
+  "create_schema":{
+      "$schema":"http://json-schema.org/draft-07/schema#",
+      "type":"object",
+      "additionalProperties":false,
+      "required":["class"],
+      "properties":{
+          "class":{
+              "type":"integer",
+              "minimum":1,
+              "maximum":256,
+              "description":"integer id representing class to which we are applying policy"
+          },
+          "enforce":{
+              "type":"boolean",
+              "description": "Whether to enable or disable enforcement of policy on this class"
+          },
+          "window_length":{
+              "type":"integer",
+              "minimum":15,
+              "maximum":300,
+              "description":"Sliding window length in seconds"
+          },
+          "trigger_threshold":{
+              "type":"integer",
+              "minimum":1
+          },
+          "blocking_rate":{
+              "type":"number",
+              "minimum":0,
+              "maximum":100
+          }
+
+      }
+  },
+
+  "downstream_schema":{
+      "type":"object",
+      "additionalProperties":false,
+      "required":["policy_type_id", "policy_instance_id", "operation"],
+      "properties":{
+          "policy_type_id":{
+              "type":"integer",
+              "enum":[21000]
+          },
+          "policy_instance_id":{
+              "type":"string"
+          },
+          "operation":{
+              "type":"string",
+              "enum":["CREATE", "UPDATE", "DELETE"]
+          },
+          "payload":{
+              "$schema":"http://json-schema.org/draft-07/schema#",
+              "type":"object",
+              "additionalProperties":false,
+              "required":["class"],
+              "properties":{
+                  "class":{
+                      "type":"integer",
+                      "minimum":1,
+                      "maximum":256,
+                      "description":"integer id representing class to which we are applying policy"
+                  },
+                  "enforce":{
+                      "type":"boolean",
+                      "description": "Whether to enable or disable enforcement of policy on this class"
+                  },
+                  "window_length":{
+                      "type":"integer",
+                      "minimum":15,
+                      "maximum":300,
+                      "description":"Sliding window length in seconds"
+                  },
+                  "trigger_threshold":{
+                      "type":"integer",
+                      "minimum":1
+                  },
+                  "blocking_rate":{
+                      "type":"number",
+                      "minimum":0,
+                      "maximum":100
+                  }
+
+
+              }
+          }
+      }
+  },
+  "notify_schema":{
+      "type":"object",
+      "additionalProperties":false,
+      "required":["policy_type_id", "policy_instance_id", "handler_id", "status"],
+      "properties":{
+          "policy_type_id":{
+              "type":"integer",
+              "enum":[21000]
+          },
+          "policy_instance_id":{
+              "type":"string"
+          },
+          "handler_id":{
+              "type":"string"
+          },
+          "status":{
+              "type":"string",
+              "enum":["OK", "ERROR", "DELETED"]
+          }
+      }
+  }
+}
+
+# now curl that policy. in non-rt-ric
+#Note: change localhost to IP address (139.6.19.30:10000)
+curl -X PUT "http://localhost/a1-p/policytypes/21003/" -H "Content-Type: application/json" -d @policy_schema_ratecontrol.json
+
+
+# now set external IP of  service-ricplt-a1mediator-http              ClusterIP   10.103.115.180   <externel IP>   10000/TCP
+root@near-rt-ric:/home/o-ran# kubectl patch svc "service-ricplt-a1mediator-http" -n "ricplt" -p '{"spec":{"externalIPs":["139.6.19.30"]}}'
+
+
+# Run it after as following build_non.sh
+
+kubectl create namespace nonrtric
+
+helm install \
+--debug oran-nonrtric local/nonrtric \
+--namespace nonrtric \
+-f /root/dep/smo-install/helm-override/default/oran-override.yaml \
+--set nonrtric.persistence.mountPath="/dockerdata-nfs/deployment-$timestamp"
+
+
+# To set external IP of both (near and non RT RIC) 
+namespace=$1
+if [[ $# -eq 0 ]] ; then
+    echo "Geben Sie den Namespace ein, welche exposed werden soll:" 
+    read namespace
+fi
+
+ip=$(ip addr show $(ls /sys/class/net | grep ^e) | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')
+
+for service in $(kubectl get services -n "$namespace" --no-headers | awk '{ print $1 }'); do
+  echo "Patche Service $service ..."
+  #kubectl patch svc "$service" -n "$namespace" -p '{"spec": {"externalTrafficPolicy":"Local"}}' -> need to be verified
+  kubectl patch svc "$service" -n "$namespace" -p '{"spec":{"externalIPs":["'$ip'"]}}'
+done
+
+kubectl get services -A
+
+
+#To delete namespace onap
+helm ls --all --namespace onap --short | xargs -L1 helm delete
+
+#Deploy helm for onap
+ helm deploy \
+    --debug onap local/onap \
+    --namespace onap \
+    -f /root/dep/smo-install/helm-override/default/onap-override.yaml \
+    --set global.persistence.mountPath="/dockerdata-nfs/deployment-$timestamp" \
+    --set dmaap.message-router.message-router-zookeeper.persistence.mountPath="/dockerdata-nfs/deployment-$timestamp" \
+    --set dmaap.message-router.message-router-kafka.persistence.mountPath="/dockerdata-nfs/deployment-$timestamp"
+
+
+
+
+
+
