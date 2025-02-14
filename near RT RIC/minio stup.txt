@@ -1,0 +1,98 @@
+mkdir -p ~/minio/data
+
+docker run \
+   -p 9000:9000 \
+   -p 9001:9001 \
+   --name minio \
+   -v ~/minio/data:/data \
+   -e "MINIO_ROOT_USER=minioadmin" \
+   -e "MINIO_ROOT_PASSWORD=minioadmin" \
+   quay.io/minio/minio server /data --console-address ":9001"
+
+
+Correct: 
+sudo docker run -it --name=miniotest -p 9000:9000 -p 9001:9001 minio/minio server /data --console-address ":9001"
+delete images: 
+docker rm -vf $(docker ps -aq)
+docker rmi -f $(docker images -aq)docker version
+
+Docker container start -d "container name" -it
+
+
+
+Check installed status
+sudo apt-cache policy docker*
+uninstalled docker...
+sudo apt purge ...(it could be .io, -compose, .io-doc.....)
+
+docker restart miniotest
+
+http://127.0.0.1:9000/images/
+
+mc alias set local http://127.0.0.1:9000 -p minioadmin -p minioadmin
+mc admin info local
+
+For NEAR RT RIC
+docker run -p 9000:9000 -d -e "MINIO_ACCESS_KEY=minioadmin" -e MINIO_SECRET_KEY=minioadmin" minio/minio ./data-minio
+
+INstallation From O-RAN Alliance 
+pwd
+cd dep/tools/k8s/bin/
+
+sudo -i
+find /home/myric/ -type d -name dep
+cd /home/myric/dep
+cd tools/k8s/bin/
+ cd ~
+cd tools/k8s/bin/
+ls -al
+
+# kubectl get pods -n kube-system
+# kubectl describe service kube-dns -n kube-system
+# kubectl get service -n kube-system
+# kubectl get ep kube-dns --namespace=kube-system
+# kubectl get service -n ricplt
+To save&exit a .yaml file > #:wq
+To exit > #q!
+
+
+
+Kubernetes Command:
+Examples:
+  # List all pods in ps output format.
+  kubectl get pods
+  
+  # List all pods in ps output format with more information (such as node name).
+  kubectl get pods -o wide
+  
+  # List a single replication controller with specified NAME in ps output format.
+  kubectl get replicationcontroller web
+  
+  # List deployments in JSON output format, in the "v1" version of the "apps" API group:
+  kubectl get deployments.v1.apps -o json
+  
+  # List a single pod in JSON output format.
+  kubectl get -o json pod web-pod-13je7
+  
+  # List a pod identified by type and name specified in "pod.yaml" in JSON output format.
+  kubectl get -f pod.yaml -o json
+  
+  # List resources from a directory with kustomization.yaml - e.g. dir/kustomization.yaml.
+  kubectl get -k dir/
+  
+  # Return only the phase value of the specified pod.
+  kubectl get -o template pod/web-pod-13je7 --template={{.status.phase}}
+  
+  # List resource information in custom columns.
+  kubectl get pod test-pod -o custom-columns=CONTAINER:.spec.containers[0].name,IMAGE:.spec.containers[0].image
+  
+  # List all replication controllers and services together in ps output format.
+  kubectl get rc,services
+  
+  # List one or more resources by their type and names.
+  kubectl get rc/web service/frontend pods/web-pod-13je7
+
+kubectl get - list resources
+kubectl describe - show detailed information about a resource
+kubectl logs - print the logs from a container in a pod
+kubectl exec - execute a command on a container in a pod

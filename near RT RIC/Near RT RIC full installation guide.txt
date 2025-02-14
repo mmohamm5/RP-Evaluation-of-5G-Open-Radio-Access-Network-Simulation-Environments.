@@ -1,0 +1,148 @@
+##########Implement Near RT RIC >>>>>>>>>>><Machine name: Ex2 Clone2 >>>>>>>>>
+
+ex2@ex2:~$ sudo su
+
+root@ex2:/home/ex2# lsb_release -a
+root@ex2:/home/ex2# git clone https://gerrit.o-ran-sc.org/r/ric-plt/ric-dep
+root@ex2:/home/ex2# cd ric-dep/bin
+
+#########Install kuberenetes and helm
+root@ex2:/home/ex2/ric-dep/bin# ./install_k8s_and_helm.sh
+root@ex2:/home/ex2/ric-dep/bin# apt install curl
+root@ex2:/home/ex2/ric-dep/bin# ./install_k8s_and_helm.sh
+root@ex2:/home/ex2/ric-dep/bin# kubectl get pods -n kube-system
+root@ex2:/home/ex2/ric-dep/bin# ./install_common_templates_to_helm.sh
+
+
+ ###Now create a txt file
+  ### the "for ... docker pull" loop is not necessary, but it separates the image pull from the public image registry and the actual installation
+  ### make sure to use same versions as in ../RECIPE_EXAMPLE/example_recipe_oran_f_release.yaml
+  ###cat versions.txt
+
+root@ex2:/home/ex2# vi versions.txt  ( Do it in home directory)
+
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-a1:2.5.2
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-appmgr:0.5.6
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-dbaas:0.6.1
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2mgr:6.0.0
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2:6.0.0
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-rtmgr:0.9.1
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-submgr:0.9.3
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-vespamgr:0.7.5
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-o1:0.6.0
+nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-alarmmanager:0.5.13
+nexus3.o-ran-sc.org:10002/o-ran-sc/it-dep-init:0.0.1
+docker.io/prom/prometheus:v2.18.1
+docker.io/kong/kubernetes-ingress-controller:0.7.0
+docker.io/kong:1.4
+docker.io/prom/alertmanager:v0.20.0
+
+root@ex2:/home/ex2# for i in `cat versions.txt`; do echo $i; docker pull $i; done
+
+###Now check IP table 
+
+root@ex2:/home/ex2/ric-dep/bin# ip a
+root@ex2:/home/ex2/ric-dep# cd RECIPE_EXAMPLE
+
+##copy IP address and go to this file and peste ip address in
+
+root@ex2:/home/ex2/ric-dep/RECIPE_EXAMPLE# vi ../RECIPE_EXAMPLE/example_recipe_oran_f_release.yaml
+root@ex2:/home/ex2/ric-dep/bin# ./install -f ../RECIPE_EXAMPLE/example_recipe_oran_f_release.yaml
+
+To see the riplt is running:    kubectl get pods -n ricplt
+
+
+######To see the RECIPE FILE
+root@ex2:/home/ex2/ric-dep/bin# cat ../RECIPE_EXAMPLE/example_recipe_oran_f_release.yaml
+
+
+
+******************* ORAN SIM
+https://wiki.o-ran-sc.org/display/SIM/E2+Simulator#E2Simulator-Buildingdockerimageandrunningsimulatorinstance
+
+root@ex2:/home/ex2# git clone https://gerrit.o-ran-sc.org/r/sim/e2-interface
+root@ex2:/home/ex2# apt-get install cmake g++ libsctp-dev
+
+root@ex2:/home/ex2# cd e2-interface/e2sim
+root@ex2:/home/ex2/e2-interface/e2sim# ll
+root@ex2:/home/ex2/e2-interface/e2sim# cd docker/
+root@ex2:/home/ex2/e2-interface/e2sim/docker# ll
+root@ex2:/home/ex2/e2-interface/e2sim/docker# vi Dockerfile
+### modify last line to "sleep 100000000"
+
+root@ex2:/home/ex2/e2-interface/e2sim# mkdir build
+root@ex2:/home/ex2/e2-interface/e2sim# cd build/
+
+root@ex2:/home/ex2/e2-interface/e2sim/build# cmake ..   && make package && cmake ..   -DDEV_PKG=1 && make package
+root@ex2:/home/ex2/e2-interface/e2sim/build# cp *.deb ../e2sm_examples/kpm_e2sm/
+root@ex2:/home/ex2/e2-interface/e2sim/build# cd ../e2sm_examples/kpm_e2sm/
+
+***************************************************************************************************************************To running thins process>>> root@ex2:/home/ex2# cd e2-interface/e2sim
+                                                                                                                                                       root@ex2:/home/ex2/e2-interface/e2sim# cd e2sm_examples/kpm_e2sm
+                                                                                                                                                       root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# docker container start oransim
+			                                                                                                                               root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# service docker restart
+			                                                                                                                               root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# sudo docker start oransim
+                                                                                                                                                       root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# docker exec -ti oransim /bin/bash
+                                                                                                                                                       root@80e026fbc6e9:/playpen# kpm_sim 10.108.253.249 36422
+
+
+*****************************************************************************************************************************To running thins process>>>  root@ex2:/home/ex2# cd ric-dep/bin
+                                                                                                                                                           root@ex2:/home/ex2/ric-dep/bin# curl -X GET http://10.99.10.249:3800/v1/nodeb/states 2>/dev/null|jq
+
+root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# docker build -t oransim:0.0.999 .
+root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# docker run -d --name oransim -it oransim:0.0.999
+kubectl get services -n ricplt
+kpm_sim 10.100.68.75 36422 
+
+root@ex2:/home/ex2/e2-interface/e2sim/e2sm_examples/kpm_e2sm# docker exec -ti oransim /bin/bash
+
+root@80e026fbc6e9:/playpen# kpm_sim 10.100.68.75 36422
+
+
+##########check the connectivity complete or not 
+root@ex2:/home/ex2/ric-dep/bin#  curl -X GET http://10.99.10.249:3800/v1/nodeb/states 2>/dev/null|jq
+
+#######dms_cli
+
+root@ex2:/home/ex2# docker run --rm -u 0 -it -d -p 8090:8080 -e DEBUG=1 -e STORAGE=local -e
+                    STORAGE_LOCAL_ROOTDIR=/charts -v $(pwd)/charts:/charts chartmuseum/chartmuseum:latest
+
+root@ex2:/home/ex2# export CHART_REPO_URL=http://0.0.0.0:8090
+root@ex2:/home/ex2# git clone https://gerrit.o-ran-sc.org/r/ric-plt/appmgr -b f-release
+root@ex2:/home/ex2# cd appmgr/xapp_orchestrater/dev/xapp_onboarder
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# apt-get install python3-pip
+
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# pip3 uninstall xapp_onboarder
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# pip3 install ./
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# chmod 755 /usr/local/bin/dms_cli
+
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# ls -la /usr/local/lib/python3.8
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# chmod -R 755 /usr/local/lib/python3.8
+
+
+
+******************* HW-GO
+
+
+
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# git clone https://gerrit.o-ran-sc.org/r/ric-app/hw-go
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder# cd hw-go
+
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder/hw-go# docker build -t example.com:80/hw-go:1.2 .
+
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder/hw-go# vi config/config-file.json
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder/hw-go# dms_cli onboard ./config/config-file.json ./config/schema.json
+root@ex2:/home/ex2/appmgr/xapp_orchestrater/dev/xapp_onboarder/hw-go# dms_cli install hw-go 1.0.0 ricxapp
+
+####To check RICXPP kuberenetes pods,
+root@ex2:/home/ex2# cd ric-dep/bin
+root@ex2:/home/ex2/ric-dep/bin# kubectl get pods -n ricxapp
+
+#### To see running kuberenetes pods
+
+kubectl get services -n ricplt
+kubectl get pods -n ricplt
+
+### Run Docker images:
+docker container start oransim
+sudo docker start oransim
