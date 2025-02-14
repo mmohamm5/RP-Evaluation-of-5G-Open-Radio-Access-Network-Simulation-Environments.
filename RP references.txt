@@ -1,0 +1,63 @@
+    \bibitem{Website}
+    O-RAN Alliance. "O-RAN Alliance".
+    Date: 07.06.2023.  
+    available online: \url{https://docs.o-ran-sc.org/en/latest/architecture/architecture.html}.
+    
+    \bibitem{Website}
+    O-RAN Alliance. "O-RAN Alliance".
+    Date: 07.06.2023.  
+    Download WG3, WG2 and WG1.
+    available online: \url{https://orandownloadsweb.azurewebsites.net/specifications}.
+
+    
+    \bibitem{Wiki}
+    O-RAN Software Community. "Release G - Run in Kubernetes". 
+    Date: 06.06.2023.
+    available online: \url{https://wiki.o-ran-sc.org/display/RICNR/Release+G+-+Run+in+Kubernetes}.
+    
+    \bibitem{Website}
+    O-RAN Alliance. "Download O-RAN specifications".
+    Date: 06.06.2023.
+    available online: 
+    \url{https://www.o-ran.org/specifications}.
+    
+    \bibitem{Website}
+    o-ran-sc.org. "Installation Guides".
+    Date: 05.06.2023.
+    available online:
+    \url{https://docs.o-ran-sc.org/projects/o-ran-sc-it-dep/en/latest/installation-guides.html#virtualbox-vms-as-installation-hosts}.
+
+    \bibitem{wiki}
+    O-RAN Software Community. "F Release".
+    Date: 04.06.2023.
+    available online:
+    \url{https://wiki.o-ran-sc.org/display/REL/F+Release}.
+
+    \bibitem{Website/blog}
+    rimedolabs.com. "O-RAN Near-Real-Time RIC". 
+    Date: 07.06.2023.
+    available online: \url{https://rimedolabs.com/blog/o-ran-near-real-time-ric/}.
+
+    \bibitem{blog}
+    Oliver Radwell. "Simple Single-node Kubernetes Cluster via kubeadm on Ubuntu 22.04".
+    Date: 07.06.2023.
+    available online: \url{https://blog.radwell.codes/2022/07/single-node-kubernetes-cluster-via-kubeadm-on-ubuntu-22-04/}.
+     \bibitem{Website}
+    linuxconfig.org. "Ubuntu 20.04 Remote Desktop Access from Windows 10".
+    Date: 07.06.2023.
+    available online: \url{https://linuxconfig.org/ubuntu-20-04-remote-desktop-access-from-windows-10}.
+
+   \bibitem{Website}
+    linkedin.com. "O-RAN Overview, Architecture, near-Real-Time RIC and Use Cases".
+    Date: 07.06.2023.
+    available online: \url{https://www.linkedin.com/pulse/o-ran-overview-architecture-near-real-time-ric-use-cases-dryjanski/}.
+
+    \bibitem{Source-code Management tool}
+    github.com. "User Guide and APIs".
+    Date: 07.06.2023.
+    available online: \url{https://github.com/o-ran-sc/ric-plt-a1/blob/master/docs/user-guide-api.rst}.
+
+    \bibitem {malpezziran}
+    Article
+  Title={O-RAN SOFTWARE DEPLOYMENT AND ORCHESTRATION ON VIRTUALIZED INFRASTRUCTURES},
+  author={MALPEZZI, PAOLO} 
