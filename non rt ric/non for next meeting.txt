@@ -1,0 +1,10 @@
+helm uninstall r3-dev-nonrtric -n nonrtric #to uninstall helm release from namespaces
+helm ls -n nonrtric
+
+
+sudo dep/bin/deploy-nonrtric -f dep/nonrtric/RECIPE_EXAMPLE/example_recipe.yaml
+
+
+
+WYTxX8tghru4V!EX
+
