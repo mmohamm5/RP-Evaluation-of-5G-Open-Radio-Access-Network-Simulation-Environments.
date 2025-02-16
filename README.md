@@ -241,4 +241,128 @@ RAN Intelligent Controller (RIC) [Figure 4] is a logical function that provides 
 The RIC comprises two main elements: the near-RT RIC and the non-RT RIC. The near-RT RIC provides near-real-time control and optimization of RAN elements and resources, such as radio resource allocation, traffic steering, and interference management. On the other hand, the non-RT RIC enables nonreal- time control and optimization of RAN elements and resources, including AI/ML workflows for model training and updates and policy-based guidance of applications/features in near-RT RIC.
 
 ![RAN Intelligent Controller Architecture](asset/arch4.PNG)
-        Figure 4: RAN Intelligent Controller Architecture
+Figure 4: RAN Intelligent Controller Architecture
+
+The RIC architecture also includes other key elements such as O-CU, O-CUCP, O-CU-UP, O-DU, and O-RU. O-CU is the central unit in the RAN that hosts RRC, SDAP, and PDCP protocols. O-CU-CP is the control plane part of the PDCP protocol, while O-CU-UP hosts the user plane part of the PDCP protocol and the SDAP protocol. O-DU hosts RLC, MAC, and high-PHY layers based on a lower-layer functional split, while O-RU hosts low-PHY layers and RF processing based on a lower-layer functional split.
+
+RIC architecture also includes an O1 interface between management entities in the Service Management and Orchestration Framework and O-RAN managed elements. The O1 interface is used for operation and management, through which FCAPS management, software management, file management, and other operations are achieved.
+
+**3 RIC Environment Set-up and Deployment**
+**3.1 Infrastructure Preparation and Deployment of near- RT RIC.**
+
+Hardware Requirements:
+Operating System Ubuntu 20.04
+-Core 8 vCPU
+-Memory 16 GB
+-Disk 100 GB
+-GPU 16 GB
+
+Software Requirements:
+• Container orchestration: Kubernetes- v1.16
+• Container runtime: Docker and docker-compose (latest)
+• Kubernetes Package manager Helm Chart v3.5
+• Helm Chart Repository: ChartMuseum
+
+**3.1.1 Prerequisites Installation and deployment of near-RT RIC.**
+
+1. Start by preparing a fresh Ubuntu 20.04 environment specifically tailored for near-RT RIC deployment.
+2. Install Kubernetes, helm, and the necessary base chart, ensuring they are properly configured for the upcoming Near-RT RIC deployment.
+3. Proceed with the installation of near-RT RIC, taking care to follow the recommended guidelines and dependencies.
+4. Compile and establish a seamless connection to the O-RAN E2 (e2-node) simulator sourced from the O-RAN SC simulator project.
+5. Utilize the dms-cli tool to effortlessly deploy xApps, streamlining the deployment process and enhancing efficiency.
+6. Compile, onboard, and install the hw-go xapp derived from the O-RAN SC xApp project, incorporating its functionality into the system with precision.
+
+
+**Step (1): Prepared ubuntu 20.04 from DN.Lab with hardware specifications.**
+
+According to the prerequisites, set up the Ubuntu server from DN.LAB (TH K¨oln). Now we can check the Ubuntu version [Figure 5] against the requirements by following the command.
+
+```bash
+lsb_release -a
+```
+
+To ensure that, Ubuntu version is right:
+
+```bash
+root@srv6 :/ home /o- ran # lsb_release -a
+No LSB modules are available .
+Distributor ID: Ubuntu
+Description : Ubuntu 20.04.6 LTS
+Release : 20.04
+Codename : focal
+```
+
+**Step (2): Install Kubernetes, helm, and the necessary base chart, ensuring they are properly configured for the upcoming Near-RT RIC deployment.**
+
+(Note: Run all command in root user.)
+Sample command: sudo su
+
+Now clone the git repository that has deployment scripts and additional
+files (ric-plt/dep) with the following command.
+
+```bash
+git clone https :// gerrit .o-ran -sc. org /r/ric - plt /ric - dep
+```
+
+To deploy near-RT RIC we need to install Docker, Kubernetes, Helm, and Kubernetes-CNI.
+
+To install Kubernetes, run the following command in the right directory:
+
+```bash
+cd ric - dep / bin
+./ install \ _k8s \ _and \ _helm .sh
+```
+
+Note: It will take time, and once it’s done, check if Kubernetes is installed or not with the following command. It will show whether Kubernetes system pods are running or not.
+
+```bash
+Kubectl get pods -n kube - system
+```
+Output:
+
+```bash
+root@srv :/ home /o- ran # kubectl get pods -n kube - system
+NAME READY STATUS RESTARTS AGE
+coredns -5644 d7b6d9 -58 xml 1/1 Running 2 12d
+coredns -5644 d7b6d9 - d446p 1/1 Running 2 12d
+etcd - srv6 .5g.dn.th. koeln .de 1/1 Running 2 12d
+kube - apiserver - srv6 .5g.dn.th ... 1/1 Running 2 12d
+kube - flannel -ds - rr56g 1/1 Running 2 12d
+kube -proxy - dgxvm 1/1 Running 2 12d
+kube - scheduler - srv6 .5g.dn.th .... 1/1 Running 2 12d
+```
+
+This is the output of the Kubectl get pods -n kube-system command. Here, all necessary pods are running, which is mandatory for Kubernetes installation. Now Kubernetes is installed properly.
+
+Note: Make sure curl is installed. If not, then run this command to install curl:
+
+```bash
+apt install curl
+```
+To set up the new systemconfig folder, we need to create it and then include the *PROXY variables. Additionally, make sure to add the line ”EnvironmentFile=-/etc/sysconfig/docker” and include the registry-mirrors in the ExecStart.
+
+Include the line ”EnvironmentFile=-/etc/sysconfig/docker” in the ”systemconfig” folder. This line configures the Docker environment.
+
+Add the registry-mirrors entry in the ExecStart section. This enables the system to use mirror servers for faster Docker image downloads.
+
+Ensure that the systemconfig folder contains all the necessary configurations, including the *PROXY variables, the ”EnvironmentFile=-/etc/sysconfig /docker” line, and registry-mirrors.
+Run the commands below:
+
+```bash
+mkdir / etc / sysconfig
+vi / etc / sysconfig / docker
+vi / lib / systemd / system / docker . service
+systemctl daemon - reload
+```
+Now we will install Chart Museum into Helm and add ric-common templates
+with the following command.
+
+```bash
+./ install \ _common \ _templates \ _to \ _helm .sh
+```
+
+**Step (3):Proceed with the installation of near-RT RIC, taking care to follow the recommended guidelines and dependencies.**
+
+Now Create a txt file to separate the image pull from the public image registry from the actual installation. make sure to use same versions as in ../RECIPE EXAMPLE/example recipe oran f release.yaml
+
+20 number page projonto completed.
