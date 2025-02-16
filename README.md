@@ -1388,7 +1388,7 @@ _configuration . json
 
 Edit this json file by using the following codes:
 
-```bash
+```yaml
 {
 " config ": {
 " controller ": [
