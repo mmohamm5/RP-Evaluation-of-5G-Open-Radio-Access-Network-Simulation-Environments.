@@ -170,3 +170,75 @@ The non-RT RIC, or non-real-time RAN Intelligent Controller, is responsible for 
 
         Figure 3: Non-RT RIC reference Architecture
         
+**R1 Services:**
+R1 services refer to a collection of services provided by logical functions within the Non-RT RIC framework or SMO (Service Management and Orchestration) framework, as well as by rApps (RIC applications).
+
+These services are designed to enable various functions such as service registration, service discovery, service notification, authorization, authentication, communication support, and potentially bootstrap and heartbeat services. 
+
+The R1 services are essential for managing and exposing functionalities within the Non-RT RIC framework, or rApps.
+
+**R1 Service Management and Exposure:**
+R1 service management and exposure functions are responsible for facilitating the usage and access of R1 services.
+
+These functions handle tasks such as registering R1 services, discovering available services, notifying relevant parties about service updates, and providing authorization and authentication mechanisms for secure access to the services.
+
+Additionally, communication support is provided to enable the exchange of messages between the Non-RT RIC framework, rApps, and the R1 services.
+
+**R1 Termination and R1 Interface:**
+The R1 termination represents the endpoint or interface through which the Non-RT RIC framework and rApps communicate with the R1 services.
+
+The R1 interface acts as the means for exchanging messages and accessing the R1 services. 
+
+It enables the Non-RT RIC framework and rApps to interact with the R1 services, leveraging the functionalities provided by the R1 service management and exposure functions.
+
+**Service management and exposure services:**
+Service management and exposure services within the Non-RT RIC (Non-Real- Time RAN Intelligent Controller) framework or SMO (Service Management and Orchestration) framework encompass essential functionalities for handling services. These services include registration, discovery, notification, and secure access.
+
+**Service Registration:** It involves making services available within the framework, or SMO environment. The framework or related apps register the services they offer, making it possible for other entities to find and use them.
+
+**Service Discovery:** This feature enables entities within the framework or SMO environment to find and identify available services. By querying a registry or directory, entities can locate the specific services they require for their operations or interactions.
+
+**Service Notification:** When changes or updates occur to registered services, relevant parties are informed through notifications. This ensures that entities stay informed about modifications, such as updates or terminations, to the services they rely on. 
+
+Service management and exposure services play a critical role in the Non-RT RIC framework or SMO  ramework, ensuring efficient operation, coordination, and secure access to services. By providing registration, discovery, notification, authorization, and communication support, these services enable seamless utilization of services within the framework or SMO environment.
+
+**A1 policy related services:**
+A1 policy-related services are services that pertain to the management, enforcement, and administration of policies within a system or framework. These services are responsible for defining, configuring, and enforcing policies to guide the behavior, actions, and access rights of entities within the system. Here are key aspects of A1 policy-related services:
+
+**Policy Definition and Configuration:** These services allow the definition and configuration of policies that govern various aspects of the system, such as security, access control, resource allocation, or behavior guidelines. Policies are typically defined using policy languages or rule-based systems, specifying conditions and actions to be enforced.
+
+**Policy Evaluation and Enforcement:** A1 policy-related services evaluate and enforce policies in real-time or as needed. They assess the current state of the system, including the actions of entities and the context, and compare it against the defined policies. 
+
+If a policy violation is detected, appropriate actions are taken to enforce compliance or trigger mitigation procedures.
+
+**Policy Monitoring and Reporting:** These services provide monitoring capabilities to track policy compliance and system behavior. They generate reports and alerts regarding policy 
+ iolations, exceptions, or patterns of non-compliance, enabling system administrators to
+take appropriate actions.
+
+**Policy Adaptation and Learning:** A1 policy-related services may incorporate adaptive or learning capabilities to dynamically adjust policies based on evolving system conditions or changing requirements.
+
+They can analyze system behavior, gather feedback, and modify policies accordingly to optimize system performance or adapt to new circumstances.
+
+**Policy Interoperability and Integration:** A1 policy-related services facilitate the integration and interoperability of policies across different components or systems within an ecosystem. They enable policy exchange, translation, or synchronization mechanisms to ensure consistent policy enforcement and coordination across the system.
+
+A1 policy-related services play a crucial role in managing and enforcing policies within a system, ensuring compliance, security, and appropriate behavior. They provide the necessary mechanisms to define, evaluate, adapt, and monitor policies, promoting system stability, consistency, and governance.
+
+**2.5.4 O-RAN Central Unit (O-CU)**
+The O-RAN Central Unit, or O-CU, is a logical node that houses the RRC, SDAP, and PDCP protocols. Specifically, the O-CU-CP hosts the RRC and control plane parts of the PDCP protocol, while the O-CU-UP hosts the user plane parts of the PDCP protocol and the SDAP protocol.
+
+**2.5.5 O-RAN Distributed Unit (O-DU)**
+The O-RAN Distributed Unit, or O-DU, is a logical node that houses the RLC, AC, and High-PHY layers based on a lower layer functional split.
+
+**2.5.6 O-RAN Radio Unit (O-RU)**
+The O-RAN Radio Unit, or O-RU, is a logical node that houses the low-PHY layer and RF processing based on a lower-layer functional split. This is like 3GPP’s ”TRP” or ”RRH,” but is more specific in including the Low-PHY layer, such as FFT/IFFT and PRACH extraction.
+
+**2.5.7 O1 Interface**
+O1 is an interface that facilitates communication between management entities in the Service Management and Orchestration Framework and O-RAN managed elements. Its primary purpose is to enable the operation and management of these elements by supporting functions such as FCAPS management, software management, and file management. The O1 interface provides a standardized and secure means of accessing and controlling O-RAN network elements, ensuring efficient and effective management of these critical components.
+
+**2.6 RAN Intelligent Controller**
+RAN Intelligent Controller (RIC) [Figure 4] is a logical function that provides near-real-time control and optimization of Radio Access Network (RAN) resources through fine-grained data collection and actions over the E2 interface. RIC architecture is based on the principles of Open RAN and is designed to be flexible, scalable, and vendor neutral.
+
+The RIC comprises two main elements: the near-RT RIC and the non-RT RIC. The near-RT RIC provides near-real-time control and optimization of RAN elements and resources, such as radio resource allocation, traffic steering, and interference management. On the other hand, the non-RT RIC enables nonreal- time control and optimization of RAN elements and resources, including AI/ML workflows for model training and updates and policy-based guidance of applications/features in near-RT RIC.
+
+![RAN Intelligent Controller Architecture](asset/arch4.PNG)
+        Figure 4: RAN Intelligent Controller Architecture
