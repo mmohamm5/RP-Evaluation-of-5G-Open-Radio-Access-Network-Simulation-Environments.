@@ -365,4 +365,750 @@ with the following command.
 
 Now Create a txt file to separate the image pull from the public image registry from the actual installation. make sure to use same versions as in ../RECIPE EXAMPLE/example recipe oran f release.yaml
 
-20 number page projonto completed.
+Run this command:
+
+```bash
+vim versions . txt
+```
+
+Note: ’vim’ is an editor. Make sure vim is installed.
+Now create a Docker container text file.From the developer images list
+(below), copy them and save them as versions.txt.
+
+```bash
+versions . txt
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt -a1 :3.0.0
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - appmgr :0.5.7
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - dbaas :0.6.2
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - e2mgr :6.0.1
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt -e2 :6.0.1
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - rtmgr :0.9.4
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - submgr :0.9.5
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - vespamgr :0.7.5
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt -o1 :0.6.1
+nexus3 .o-ran -sc. org :10002/o-ran -sc/ric -plt - alarmmanager
+:0.5.14
+nexus3 .o-ran -sc. org :10002/o-ran -sc/it -dep - init :0.0.1
+docker .io/ prom / prometheus :v2 .18.1
+docker .io/ kong / kubernetes - ingress - controller :0.7.0
+docker .io/ kong :1.4
+docker .io/ prom / alertmanager :v0 .20.0
+```
+So, we saved all Docker images in versions.txt file . Now Pull the docker images from nexus3.o-rano-sc.org
+Run the command below.
+
+```bash
+for i in `cat versions .txt `; do echo $i; docker pull $i;
+done
+```
+Note: It will take time. We pulled this image before creating Kubernetes pods because Kubernetes will create as following RECIPE EXAMPLE file. We pulled the actual Docker container file for near-real-time ric deployment.
+
+After the recipes are edited and helm started, the Near Realtime RIC platform is ready to be deployed, but first update the deployment recipe as per instructions in the next section.
+
+Now modify and deploy near-RT RIC. Now we can start the installation of near-RT RIC. Before that, we need the IP address of the particular node, and to get the IP address, run the following command.
+
+```bash
+ip a
+```
+
+Edit the recipe files ./RECIPE EXAMPLE/example recipe latest stable.yaml (which is a softlink that points to the latest release version). “example recipe latest unstable.yaml points to the latest example file that is under current development.
+
+```bash
+vim ../ RECIPE \ _EXAMPLE / example \ _recipe \ _oran \_f\ _release .
+yaml
+```
+
+Deployment scripts support both helm v2 and v3. The deployment script will determine the helm version installed in cluster during the deployment. 
+
+After updating the recipe, we can deploy the RIC with the command below. Note that we generally use the latest recipe marked stable or one from a specific release.
+Run the command below:
+
+```bash
+cd ric - dep / bin
+./ install -f ../ RECIPE \ _EXAMPLE / example \ _recipe \ _oran \_f\
+_release . yaml
+```
+
+Note: It will take time. After installation succeeds, we can see that near the RT RIC platform, pods are actually running.
+Now check the deployment status with the following command
+
+
+```bash
+Kubectl get pods -n ricplt
+```
+
+The output of Kubectl get pods -n ricplt command is below:
+
+```bash
+root@srv6 :/ home /o- ran # kubectl get po -n ricplt
+NAME READY STATUS
+deployment - ricplt - a1mediator -669 cc7 1/1 Running
+4647 - t22qp
+deployment - ricplt - alarmmanager -577 1/1 Running
+85458 dd - p95s4
+deployment - ricplt - appmgr -77986 c9c 1/1 Running
+bb - l6b21
+deployment - ricplt -e2mgr -5 dd878f58 1/1 Running
+b- npdff
+deployment - ricplt - e2term -alpha -68 1/1 Running
+98 f8696d -5 smjj
+deployment - ricplt -01 mediator -5 ddd6 1/1 Running
+6b4d6 -5 xlv9
+deployment - ricplt -rtmgr -788975975 1/1 Running
+b- ghlgs
+deployment - ricplt - submgr -68 fc6564 1/1 Running
+88 -6 wnd6
+deployment - ricplt - vespamgr -84 f7d8 1/1 Running
+7dfb - rq7zx
+r4 - infrastructure -kong -7995 f4679b 2/2 Running
+-bs95n
+r4 - infrastructure - prometheus - aler 2/2 Running
+tmanager -5798 b78f48 - gkkcn
+r4 - infrastructure - prometheus - serv 1/1 Running
+er - c8ddcfdf5 -6 kd48
+statefulset -ricplt -dbaas - server -0 1/1 Running
+```
+
+Here, near-real-time RIC pods (ricplt) are running with all of the RIC services installed properly.
+
+Once all ricplt pods are running, we need to check whether the helm list was created or not with the following command:
+
+```bash
+helm list -A
+```
+Output:
+
+```bash
+root@srv6 :/ home /o- ran # helm list -A
+NAME NAMESPACE REVISION STATUS CHART
+r4 - a1mediator ricplt 1 deployed a1mediator
+r4 - a1alarmmanager ricplt 1 deployed a1alarmm ..
+r4 - appmgr ricplt 1 deployed appmgr
+r4 - dbaas ricplt 1 deployed dbaas
+r4 - e2mgr ricplt 1 deployed e2mgr
+r4 - e2term ricplt 1 deployed e2term
+r4 - infrastructure ricplt 1 deployed infrastr ..
+r4 -01 mediator ricplt 1 deployed 01 mediator
+r4 - rtmgr ricplt 1 deployed rtmgr
+r4 - submgr ricplt 1 deployed submgr
+r4 - vespamgr ricplt 1 deployed vespamgr
+```
+
+Here, all (r4) of the helm lists are deployed in the same (ricplt) nampespaces, which are for near-RT-RIC.
+
+**Step (4): Compile and establish a seamless connection to the O-RAN E2 (e2-node) simulator sourced from the O-RAN SC simulator project.**
+
+Now we compile and build the Connection E2 simulator. First, we clone the git repository of source code from O-RAN SC.
+Run the command below:
+
+```bash
+git clone https :// gerrit .o-ran -sc. org /r/ sim /e2 - interface
+```
+
+Now we will install the prerequisites to compile and connect the E2 simulator.
+Run the command below:
+
+```bash
+apt - get install cmake g++ libsctp -dev
+```
+
+Now we will modify the Dockerfile with this command to change the directory first.
+Run the command below:
+
+```bash
+cd e2 - interface / e2sim
+cd docker /
+vi Dockerfile
+```
+
+Now go to the last line of the Dockerfile and edit the CMD part and change the IP address, which is the E2 termination of the RIC side.
+
+”sleep 100000000”
+Let’s start the compilation process of the simulator by taking the first step, which involves creating specific Debian packages that will be utilized in the subsequent Docker stage.
+Run the command below:
+
+```bash
+mkdir build
+cd build
+cmake .. && make package && cmake .. -DDEV_PKG =1 && make
+package
+```
+
+Now copy the Debian directory to create a Docker file to connect to the E2 simulator.
+Run the command below:
+
+```bash
+cp *. deb ../ e2sm_examples / kpm_e2sm /
+cd ../ e2sm_examples / kpm_e2sm /
+```
+
+Now build oran simulator Docker container with following command.
+
+```bash
+docker build -t oransim :0.0.999 .
+docker run -d --name oransim -it oransim :0.0.999
+```
+
+Now, to run the simulator, we launch the bash terminal within the container with the following command:
+
+```bash
+docker exec -ti oransim / bin / bash
+```
+
+Now check if the simulator is running or not with the following command:
+
+```bash
+kpm \ _sim "IP" 36422
+```
+
+Note: Replace ”IP” to run the simulator. For that, run the command below.
+
+```bash
+kubectl get services -n ricplt
+```
+
+Output:
+
+```bash
+root@srv6 :/ home /o- ran # kubectl get services -n ricplt
+NAME TYPE CLUSTER -IP PORT (S)
+aux - entry ClusterIP 10.105.132.177 80/ TCP
+,443/ TCP
+r4 - infrastructur -kong - proxy NodePort 10.98.2.131
+32080:32080/ TCP ,32443
+r4 - infrastructure - alertman : ClusterIP 10.100.7.125 80/ TCP
+r4 - infrastructure - server ClusterIP 10.105.33.31 80/ TCP
+service - ricplt - a1media :- http ClusterIP 10.102.109.89 10000/
+TCP
+service - ricplt - a1media :- rmr ClusterIP 10.96.120.158 4561/
+TCP ,4562/ TCP
+service - ricplt - alarm :- http ClusterIP 10.105.220.145 8080/
+TCP
+service - ricplt - alarm :- rmr ClusterIP 10.107.6.137 4560/
+TCP ,4561/ TCP
+service - ricplt -appmgr - http ClusterIP 10.100.8.154 8080/
+TCP
+service - ricplt -appmgr - http ClusterIP 10.102.179.240 4561/
+TCP ,4560/ TCP
+service - ricplt -dbass - tcp ClusterIP None 6379/
+TCP
+service - ricplt -e2mgr - http ClusterIP 10.109.47.153 3800/
+TCP
+service - ricplt -e2mgr - rmr ClusterIP 10.108.234.78 4561/
+TCP ,3801/ TCP
+service - ricplt -e2term - pro .. ClusterIP 10.96.118.19 8088/
+TCP
+service - ricplt -e2term - rmr .. ClusterIP 10.102.139.254 4561/
+TCP ,38000/ TCP
+service - ricplt -e2term - sctp .. NodePort 10.102.107.2
+36422:32222/ SCTP
+service - ricplt - o1mediator - htt ClusterIP 10.111.228.73 9001/
+TCP ,8080/ TCP ,3000/ TCP
+```
+
+Now copy the IP from output services in ricplt with the 36422 port and use it in the previous step.
+
+```bash
+Example : kpm_sim 10.102.107.2 36422
+```
+
+Once we run that command, we will see the simulator is connected to near-RT RIC.
+
+To show that the e2 simulator is connected to the near RT RIC follow the below steps.
+
+Copy the E2 manager IP and run the curl command with the following command:
+
+```bash
+curl -X GET http ://" IP ":3800/ v1/ nodeb / states 2>/ dev/ null |
+jq
+```
+
+Now run the following command and take the correct IP:
+
+```bash
+kubectl get services -n ricplt
+```
+
+Output:
+
+```bash
+root@srv6 :/ home /o- ran # kubectl get services -n ricplt
+NAME TYPE CLUSTER -IP PORT (S)
+aux - entry ClusterIP 10.105.132.177 80/ TCP
+,443/ TCP
+r4 - infrastructur -kong - proxy NodePort 10.98.2.131
+32080:32080/ TCP ,32443
+r4 - infrastructure - alertman : ClusterIP 10.100.7.125 80/ TCP
+r4 - infrastructure - server ClusterIP 10.105.33.31 80/ TCP
+service - ricplt - a1media :- http ClusterIP 10.102.109.89 10000/
+TCP
+service - ricplt - a1media :- rmr ClusterIP 10.96.120.158 4561/
+TCP ,4562/ TCP
+service - ricplt - alarm :- http ClusterIP 10.105.220.145 8080/
+TCP
+service - ricplt - alarm :- rmr ClusterIP 10.107.6.137 4560/
+TCP ,4561/ TCP
+service - ricplt -appmgr - http ClusterIP 10.100.8.154 8080/
+TCP
+service - ricplt -appmgr - http ClusterIP 10.102.179.240 4561/
+TCP ,4560/ TCP
+service - ricplt -dbass - tcp ClusterIP None 6379/
+TCP
+service - ricplt -e2mgr - http ClusterIP 10.109.47.153 3800/
+TCP
+service - ricplt -e2mgr - rmr ClusterIP 10.108.234.78 4561/
+TCP ,3801/ TCP
+service - ricplt -e2term - pro .. ClusterIP 10.96.118.19 8088/
+TCP
+service - ricplt -e2term - rmr .. ClusterIP 10.102.139.254 4561/
+TCP ,38000/ TCP
+service - ricplt -e2term - sctp .. NodePort 10.102.107.2
+36422:32222/ SCTP
+service - ricplt - o1mediator - htt ClusterIP 10.111.228.73 9001/
+TCP ,8080/ TCP ,3000/ TCP
+service - ricplt - o1mediator - tcp NodePort 10.108.87.21
+830:30830/ TCP
+service - ricplt -rtmgr - http ClusterIP 10.109.105.95 3800/
+TCP
+service - ricplt -rtmgr - rmr ClusterIP 10.105.222.135 4561/
+TCP ,4560/ TCP
+service - ricplt -submgr - http ClusterIP None 3800/
+TCP
+service - ricplt -submgr - rmr ClusterIP None 4560/
+TCP ,4561/ TCP
+service - ricplt - vespamgr - http ClusterIP 10.100.198.129 8080/
+TCP ,9095/ TCP
+```
+
+Now, copy the E2 manager IP (service - ricplt - e2mgr - http) and Replace ”IP” with the e2 manager IP. Run this command in the ric-dep/bin directory. And we will see the E2 simulator connected to RT RIC.
+
+```bash
+Example : curl -X GET http :// 10.109.47.153:3800/ v1/ nodeb /
+states 2>/ dev / null |jq
+```
+
+**Step (5): Utilize the dms-cli tool to effortlessly deploy xApps, streamlining the deployment process and enhancing efficiency.**
+
+The DMS component plays a vital role in the RIC platform as it manages the near-real-time (NRT) data and metadata utilized by the platform, including policy and configuration data. To interact with the DMS and perform tasks like querying, updating, and deleting data and metadata, the ”dms cli” tool is commonly employed through command-line instructions.
+
+In the context of xApp onboarding services for operators, the xApp onboarder offers a convenient cli tool named ”dms cli.” This tool takes in the xApp descriptor and optionally an additional schema file and generates xApp helm charts.
+
+To ensure the successful deployment of any xApp, it is essential to load its corresponding Helm chart into a designated private Helm repository. This repository serves as a prerequisite for xApp deployment.
+
+Run the command below.
+
+```bash
+docker run --rm -u 0 -it -d -p 8090:8080 -e DEBUG =1 -e STORAGE
+= local -e STORAGE_LOCAL_ROOTDIR =/ charts -v $( pwd )/ charts :/
+charts chartmuseum / chartmuseum : latest
+```
+
+Note: Run it in the home directory.
+
+Set up the environment variables for a CLI connection using the same port as used above. Now export the chart repository url with the following command:
+
+```bash
+export CHART \ _REPO \ _URL = http ://0.0.0.0:8090
+```
+
+**Step(6): Utilize the dms-cli tool to effortlessly deploy xApps, streamlining the deployment process and enhancing efficiency.**
+
+To deploy xapp we need to clone the app-manager repository with the following command:
+
+```bash
+git clone https :// gerrit .o-ran -sc. org /r/ric - plt / appmgr -b
+f- release
+```
+
+Now change the xapp onboarder directory to install Python for onboarding xapp with the following command:
+
+```bash
+cd appmgr / xapp \ _orchestrater /dev / xapp \ _onboarder
+```
+
+Note: If pip3 is not installed, install pip packages for python install with the following command:
+
+```bash
+apt - get install python3 - pip
+```
+
+Note: If the dms cli binary is already installed, then uninstall it first´using following command.
+
+```bash
+pip3 uninstall xapp \ _onboarder
+```
+
+Now it’s time to install xapp onboarder. For that first install Python dependencies with the following command:
+
+```bash
+pip3 install ./
+```
+
+Now modify the permissions. The instructions are for Python 3.6, and here we will install Python 3.8 with the following commands:
+
+```bash
+ls -la / usr/ local /lib/ python3 .8
+chmod -R 755 / usr / local / lib / python3 .8
+```
+
+**Step(7): Compile, onboard, and install the hw-go xapp derived from the O-RAN SC xApp project, incorporating its functionality into the system with precision.**
+
+To compile and deploy hw-go xapp, we need source code, and for that, run clone the ric-app repository by using the following command:
+
+```bash
+git clone https :// gerrit .o-ran -sc. org /r/ric - app /hw -go
+```
+
+Build Docker templates and examples. con:80 is a tag. It could be any url. It will run in the local registry. This will be used later. Follow the below commands:
+
+```bash
+cd hw -go
+docker build -t example . com :80/ hw -go :1.2 .
+```
+
+Now modify config-file.json to build a connection with xapp onboard for deployment. We are changing the registry, name, and tag in the configuration. For this, run the command below:
+
+```bash
+vim config / config - file . json
+```
+
+Note: Edit the config file in the following steps:
+
+```bash
+registry : nexus3 .o-ran -sc. org :10004 to example . com :80.
+name : hw -go.
+tag : 1.2
+```
+
+Now make sure the xapp descriptor config file and the schema file are on my local file system. We can do it by following the command:
+
+```bash
+dms_cli onboard ./ config / config - file . json ./ config / schema .
+json
+```
+
+To Install hw-go use the following command:
+
+```bash
+dms_cli install hw -go 1.0.0 ricxapp
+```
+
+When hw-go is installed, it will make e2 subscriptions to all e2 nodes that it finds connected. Now we can see ric-xapp is running and connected with the E2 simulator.
+
+Run this command to check if ricxapp pods are running or not.
+
+```bash
+kubectl get pods -n ricxapp
+```
+
+Summary: Now the near-RT RIC is successfully deployed with the specifications of the O-RAN software community.
+
+**3.2 Infrastructure Preparation and Deployment of non-RT RIC.**
+
+Hardware Requirements:
+- Operating System Ubuntu 20.04
+- Core 8 vCPU
+- Memory 32 GB
+- Disk 150 GB
+- GPU 16 GB
+
+Software Requirements:
+
+• Container orchestration: Kubernetes- v1.19+
+• Container runtime: Docker and docker-compose (latest)
+• Kubernetes Package manager Helm Chart v3.5
+• Helm Chart Repository: ChartMuseum
+
+**3.2.1 Prerequisites Installation of non-RT RIC.**
+To deploy non-RT RIC, it requires Kubernetes, Kubernetes CNI, Helm Chart, Chartmeusume, and Docker with non-RT RIC dependencies. The following steps will show the installation process for all of them. 
+**1. Install Packages** To install the package, we need ca-certificates, and we will install it with the command below:
+
+```bash
+sudo apt - get update
+sudo apt - get install -y apt - transport - https ca -
+certificates curl
+```
+
+**2. Install Containerd:** We have a few container runtimes available. Before we install a container, we need to create its configuration file. We will do it with the following commands:
+
+```bash
+curl -fsSLo containerd - config . toml \ https :// gist .
+githubusercontent . com / oradwell /31
+ef858de3ca43addef68ff971f459c2 / raw /5099
+df007eb717a11825c3890a0517892fa12dbf / containerd - config .
+toml
+sudo mkdir / etc / containerd
+sudo mv containerd - config . toml /etc / containerd / config . toml
+```
+
+Now, without any convenience, we can install container ed from the official GitHub repo with the following commands:
+
+```bash
+curl -fsSLo containerd -1.6.14 - linux - amd64 .tar.gz\ https ://
+github . com / containerd / containerd / releases / download /v1
+.6.14/ containerd -1.6.14 - linux - amd64 .tar.gz
+```
+
+Note: It will pull compressed binaries, so we need to extract that, which will happen with the below command:
+
+```bash
+sudo tar Cxzvf / usr / local containerd -1.6.14 - linux - amd64 .tar .gz
+```
+
+Now it’s time to install containered as a service. Follow the command below:
+
+```bash
+sudo curl -fsSLo /etc / systemd / system / containerd . service \
+https :// raw . githubusercontent . com / containerd / containerd /
+main / containerd . service
+sudo systemctl daemon - reload
+sudo systemctl enable --now containerd
+```
+
+**3. Install runc:** To create and run containers we need to install a native feature called runc which is a low level of container runtime. Following command will install it:
+
+```bash
+curl -fsSLo runc . amd64 \
+https :// github .com/ opencontainers / runc / releases / download /v1
+.1.3/ runc . amd64
+sudo install -m 755 runc . amd64 / usr / local / sbin / runc
+```
+
+**4. Install network plugins CNI:** We install network interface plugins from their official git repository. Following commands will install CNI:
+
+```bash
+curl -fsSLo cni - plugins -linux -amd64 -v1 .1.1. tgz \
+https :// github .com/ containernetworking / plugins / releases /
+download /v1 .1.1/ cni - plugins -linux -amd64 -v1 .1.1. tgz
+sudo mkdir -p / opt / cni / bin
+sudo tar Cxzvf / opt / cni / bin cni - plugins -linux -amd64 -v1 .1.1. tgz
+```
+
+**5.Enable IPv4 forwarding and configure iptables for bridged network traffic.**
+
+To enable proper functionality, ensure the overlay and br netfilter kernel modules are enabled, and grant iptables the capability to inspect bridged network traffic.
+Run the following command:
+
+```bash
+cat <<EOF | sudo tee / etc/ modules - load .d/k8s. conf
+overlay
+br_netfilter
+EOF
+sudo modprobe -a overlay br_netfilter
+```
+
+The required sysctl parameters must be configured for the setup, ensuring their persistence across reboots. Run the following commands:
+
+```bash
+cat <<EOF | sudo tee / etc/ sysctl .d/ k8s . conf
+net . bridge .bridge -nf -call - iptables = 1
+net . bridge .bridge -nf -call - ip6tables = 1
+net . ipv4 . ip_forward = 1
+EOF
+# Apply sysctl params without reboot
+sudo sysctl[U+FFFD]system
+```
+
+**6. Install Kubectl, Kubelet,Kubeadm:** Now we are ready to install kuberenetes. We need to make sure that their versions are compatible with the following commands:
+
+```bash
+# Add Kubernetes GPG key
+sudo curl -fsSLo /usr / share / keyrings / kubernetes - archive -
+keyring .gpg \
+https :// packages . cloud . google . com /apt/ doc/apt - key . gpg
+# Add Kubernetes apt repository
+echo "deb [ signed -by =/ usr / share / keyrings / kubernetes -
+archive - keyring .gpg ] https :// apt . kubernetes .io/ kubernetes
+- xenial main " \
+| sudo tee / etc / apt / sources . list .d/ kubernetes . list
+# Fetch package list
+sudo apt - get update
+sudo apt - get install -y kubelet kubeadm kubectl
+# Prevent them from being updated automatically
+sudo apt - mark hold kubelet kubeadm kubectl
+```
+
+**7. Ensure swap is disabled:** In order to comply with Kubernetes’ lack of support for the swap feature, it is necessary to disable it. Run the following commands:
+
+```bash
+swapon --show
+sudo swapoff -a
+```
+
+**8. Create the cluster using kubeadm:** Our non-RT RIC will work on single node clusters or multi node clusters. This research project is based
+on a single-node cluster.
+
+With just a single command, the cluster can be initialized. However, in single-node environments, it may not offer full functionality until certain modifications are made. It is important to note that we are providing the ”–pod-network-cidr” parameter, as mandated by our CNI plugin (Flannel).
+
+Run the following commands:
+
+```bash
+sudo kubeadm init --pod - network - cidr =10.244.0.0/16
+```
+
+**9. Configure kubectl:** Configuring Kubectl is important to get access to the cluster. Run the following commands:
+
+```bash
+mkdir -p $HOME /. kube
+sudo cp -i / etc/ kubernetes / admin . conf $HOME /. kube / config
+sudo chown $(id -u):$(id -g) $HOME /. kube / config
+```
+
+**10. Untaint node:** To ensure pods can be deployed to our single-node cluster without any issues, it is necessary to untaint the node. Failure to do so may result in pods being stuck in a pending state. Run the commands below to avoid this issue:
+
+```bash
+kubectl taint nodes --all node - role . kubernetes .io/ master -
+kubectl taint nodes --all node - role . kubernetes .io/ control -
+plane -
+```
+
+Note: Sometimes it will not work. At that time, run the following command:
+
+```bash
+kubectl get nodes
+kubectl taint nodes "IP" node - role . kubernetes .io/ control -
+plane =: NoSchedule
+```
+
+**11. Install a CNI pligin:** To enable networking functionality, the installation of a Container Network Interface (CNI) plugin is required. In our case, we are installing flannel as the chosen plugin with the following command:
+
+```bash
+kubectl apply -f https :// raw . githubusercontent . com / coreos /
+flannel / master / Documentation /kube - flannel .yml
+```
+
+**12. Install Helm:** For non-RT RIC, we need helm v3.5. We install our package by following the command:
+
+```bash
+curl https :// raw . githubusercontent . com / helm / helm / master /
+scripts /get -helm -3 | bash
+```
+
+**13. Install ChartMuseum:** To run the chartmuseum we insrtalled packages with the following command:
+
+```bash
+curl https :// raw . githubusercontent . com / helm / chartmuseum /
+main / scripts /get - chartmuseum | bash
+```
+
+**14. Install CSI driver:** For the storage to work, need to install the Container Storage Interface driver. Here used CSI is OpenEBS with the command below:
+
+```bash
+helm repo add openebs https :// openebs . github .io/ charts
+kubectl create namespace openebs
+helm -- namespace = openebs install openebs openebs / openebs
+```
+
+**15. Run Kubectl proxy:** To avoid the localhost error for a single node cluster, open a new terminal and run the following command:
+################################################################################ 33 number page
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+
+```bash
+./ install
+```
+```bash
+./ install
+```
+```bash
+./ install
+```
+
+```bash
+./ install
+```
+```bash
+./ install
+```
+
+
+```bash
+./ install
+```
+
+```bash
+./ install
+```
+
+```bash
+./ install
+```
+
+
+
