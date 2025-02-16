@@ -1142,13 +1142,76 @@ oru -app -8 db46d4cf - jd66b 1/1 Running 1(105 m ago ) 3h 55m
 ```
 
 **Summary:** Now we can see that all pods are in the running stage. Where the A1 simulator, controller, helmanager and other necessary Kubernetes pods are active. It means the non-RT RIC platform is ready to use.
-############ 36 page done ######
+
+**3.3 Deployment Status Testing.**
+To check the deployment status of both RAN intelligent controllers, follow
+the following steps:
+
+**3.3.1 near-RT RIC Status.**
+Kubernetes Pods status: To ensure that near-RT RIC is deployed or not, we need to check pod status. We can see that all pods are running. So, near-RT RIC has been deployed successfully. Run the following command.
+
 ```bash
-./ install
+kubectl get po -n ricplt
 ```
+
+Output:
+
 ```bash
-./ install
+root@srv6 :/ home /o- ran # kubectl get po -n ricplt
+NAME READY STATUS AGE
+deployment - ricplt - a1mediator -669 cc7 1/1 Running 18d
+4647 - t22qp
+deployment - ricplt - alarmmanager -577 1/1 Running 18d
+85458 dd - p95s4
+deployment - ricplt - appmgr -77986 c9c 1/1 Running 18d
+bb - l6b21
+deployment - ricplt -e2mgr -5 dd878f58 1/1 Running 18d
+b- npdff
+deployment - ricplt - e2term -alpha -68 1/1 Running 18d
+98 f8696d -5 smjj
+deployment - ricplt -01 mediator -5 ddd6 1/1 Running 18d
+6b4d6 -5 xlv9
+deployment - ricplt -rtmgr -788975975 1/1 Running 18d
+b- ghlgs
+deployment - ricplt - submgr -68 fc6564 1/1 Running 18d
+88 -6 wnd6
+deployment - ricplt - vespamgr -84 f7d8 1/1 Running 18d
+7dfb - rq7zx
+r4 - infrastructure -kong -7995 f4679b 2/2 Running 18d
+-bs95n
+r4 - infrastructure - prometheus - aler 2/2 Running 18d
+tmanager -5798 b78f48 - gkkcn
+r4 - infrastructure - prometheus - serv 1/1 Running 18d
+er - c8ddcfdf5 -6 kd48
+statefulset -ricplt -dbaas - server -0 1/1 Running 18d
 ```
+
+Here,all necessary service pods are running. Importantly, a1 mediator, armanager, appmgr and 01 mediator are running. Which are responsible for building connections with non-RT RIC.
+
+*3.3.2 non-RT RIC Status.*
+For non-RT RIC, we have seen that all pods are running in previous steps. According to o-ran allaince instruction after the deployment of non- RT RIC part, we will browse it and have a control panel [Figure 5].
+
+![Non-RT RIC Control Panel](asset/arch5.PNG)
+
+Figure 5: Non-RT RIC Control Panel
+
+This non-RT RIC control panel [Figure 5] will represent the policy control and enrichment information coordinator.
+
+**Policy Control:**
+
+![Policy Control functions.](asset/arch6.PNG)
+
+Figure 6: Policy Control functions.
+
+In policy control, policy, policy type, and RIC configuration [Figure 6] will appear, and the coordinator will highlight them with ID, type, and status.
+
+**Enrichment Information Coordinator:**
+
+![Non-RT RIC Enrichment information Coordinator](asset/arch7.PNG)
+
+Figure 7: Non-RT RIC Enrichment information Coordinator
+
+
 ```bash
 ./ install
 ```
