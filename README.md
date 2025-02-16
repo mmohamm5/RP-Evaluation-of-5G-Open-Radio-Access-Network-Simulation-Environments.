@@ -1000,34 +1000,149 @@ helm -- namespace = openebs install openebs openebs / openebs
 ```
 
 **15. Run Kubectl proxy:** To avoid the localhost error for a single node cluster, open a new terminal and run the following command:
-################################################################################ 33 number page
+
 ```bash
-./ install
+kubectl proxy --port =8080
 ```
+
+Summary: To sum up, our Kubernetes is now installed perfectly. To see if the Kubernetes pods are running or not, run the following command:
+
 ```bash
-./ install
+kubectl get po -n kube - system
 ```
+
+Output:
+
 ```bash
-./ install
+root@srv :/ home /o- ran # kubectl get pods -n kube - system
+NAME READY STATUS RESTARTS AGE
+coredns -5644 d7b6d9 -58 xml 1/1 Running 2 12d
+coredns -5644 d7b6d9 - d446p 1/1 Running 2 12d
+etcd - srv6 .5g.dn.th. koeln .de 1/1 Running 2 12d
+kube - apiserver - srv6 .5g.dn.th ... 1/1 Running 2 12d
+kube - flannel -ds - rr56g 1/1 Running 2 12d
+kube -proxy - dgxvm 1/1 Running 2 12d
+kube - scheduler - srv6 .5g.dn.th .... 1/1 Running 2 12d
 ```
+
+The Kubernetes pods are running, and Kubernetes is installed. Now Kubernetes is ready to install non-RT RIC.
+
+**3.2.2 Deployment of non-RT RIC.**
+
+After the successful installation of prerequisites, it is now time to deploy non-RT RIC. As we are following G-Release, the next steps will go through o-ran software community guidelines.
+
+**1. Preparation:** Downloaded the specific repository (it/dep) based on G-release. Make sure the branch exists before cloning from the master branch. For that run the following command:
+
 ```bash
-./ install
+git clone " https :// gerrit .o-ran -sc. org /r/it/ dep " -b grelease
+or
+git clone " https :// gerrit .o-ran -sc. org /r/it/ dep "
 ```
+
+**2. Installation Component Configuration:**
+It is simple to configure the installation of nonrtric components, such as the controller and A1 simulators. All you need to do is make adjustments to a specific file known as the Helm package override file to customize the installation according to your preferences. 
+Run the following command and use any editor to edit the example recipe.yaml file:
+
 ```bash
-./ install
+\" editor " dep/ RECIPE \ _EXAMPLE / NONRTRIC / example \ _recipe .
+yaml
 ```
+
+The file shown below is part of the override example recipe.yaml.
+To enable installation, set any parameters starting with ’install’ to ’true’, and to disable installation, set them to ’false’. You can only enable either the install Non-rt- ric gateway or the install Kong parameters at the same time. The file also contains other parameters that might need to be adjusted for a specific environment, such as the hostname, namespace, and port of the message router. However, this guide does not provide instructions for configuring these integration details.
+
+Editor override file:
+
 ```bash
-./ install
+nonrtric :
+installPms : true
+installA1controller : true
+installA1simulator : true
+installControlpanel : true
+installInformationservice : true
+installRappcatalogueservice : true
+installRappcatalogueEnhancedservice : true
+installNonrtricgateway : true
+installKong : false
+installDmaapadapterservice : true
+installDmaapmediatorservice : true
+installHelmmanager : true
+installOruclosedlooprecovery : true
+installOdusliceassurance : true
+installCapifcore : true
+volume1 :
+# Set the size to 0 if you do not need the volume (if you are
+using Dynamic Volume Provisioning )
+size : 2Gi
+storageClassName : pms - storage
+volume2 :
+# Set the size to 0 if you do not need the volume (if you are
+using Dynamic Volume Provisioning )
+size : 2Gi
+storageClassName : ics - storage
+volume3 :
+size : 1Gi
+storageClassName : helmmanager - storage
+...
+...
+...
 ```
+
+**3. Installation:** There is a script that uses the helm command to pack and install the components. The installation requires a values override file, like the one mentioned before. To run this example, follow these steps:
+
 ```bash
-./ install
+sudo dep / bin / deploy - nonrtric -f
+dep / nonrtric / RECIPE \ _EXAMPLE / example \ _recipe . yaml
 ```
+
+**4. Result of the Installation:**
+During the installation process, a single Helm release will be created, and all associated Kubernetes objects will be placed within a designated name space. The predefined name space for these objects is ’nonrtric’ and cannot be modified.
+
+After the installation is complete, we can verify that by following output of the Kubernetes objects that have been created by using the ’kubectl’ command. For instance, if all components are enabled, you can check the deployed pods using the following example command:
+
 ```bash
-./ install
+kubectl get po -n nonrtric
 ```
+
+Output:
+
 ```bash
-./ install
+root@srv5 ;/ home /o- ran # kubectl get po -n nonrtric
+NAME READY STATUS RESTARTS AGE
+a1 -sim -std -0 -7 d7d6d5b69 1/1 Running 3(98 m ago ) 3h 55m
+-gxx2d
+topology -6 c5cd99d6d - q4p8r 1/1 Running 3(98 m ago) 3h 55m
+a1 -sim -osc -1 -5 bb7478885 - 1/1 Running 3(98 m ago ) 3h 55m
+7 ssh8
+a1 -sim -std2 -0 -64 cc667968 - 1/1 Running 3(98 m ago) 3h 55m
+cnzs7r
+a1 -sim -std -1 -6 d7b644cbb -g 1/1 Running 3(98 m ago) 3h 55m
+749 h
+nonrtricgateway -689 d9cf595 1/1 Running 6(96 m ago) 3h 55m
+-mw4vg
+dmaapadapterservice -0 1/1 Running 3(98 m ago ) 3h 55m
+a1 -sim -osc -0 -547 cc8fc84 - 1/1 Running 3(98 m ago ) 3h 55m
+86 vv4
+informationservice -0 1/1 Running 3(98 m ago) 3h 55m
+rappcatalogueservice -8844 f 1/1 Running 3(98 m ago ) 3h 55m
+9469 - ppwt7
+oran - nonrtric -odu -app -86 c5 1/1 Running 3(98 m ago) 3h 55m
+d494fb - pg2mr
+oran - nonrtric -kong -594 db9 2/2 Running 11(96 m ago ) 3h 55m
+cb8b - h4m4j
+oran - nonrtric -odu -app -ics - 1/1 Running 3(98 m ago) 3h 55m
+version ....
+a1 -sim -std2 -1 b668b97df -98 1/1 Running 3(98 m ago) 3h 55m
+cmd
+helmanager -0 1/1 Running 5(98 m ago ) 3h 55m
+dmaapmediatorservice -0 1/1 Running 4(95 m ago ) 3h 55m
+controlpanel -6 fb4f88778 - 1/1 Running 15(95 m ago ) 3h 55m
+rhmph
+oru -app -8 db46d4cf - jd66b 1/1 Running 1(105 m ago ) 3h 55m
 ```
+
+**Summary:** Now we can see that all pods are in the running stage. Where the A1 simulator, controller, helmanager and other necessary Kubernetes pods are active. It means the non-RT RIC platform is ready to use.
+############ 36 page done ######
 ```bash
 ./ install
 ```
