@@ -104,5 +104,69 @@ The Open RAN logical architecture provides versatility, adapting to diverse netw
 
 The architecture [Figure 1] is thoughtfully divided into two main domains to facilitate efficient management and control. The radio domain encompasses the base station and associated equipment responsible for wireless signal transmission and reception. The non-radio domain focuses on management and orchestration functions, providing the necessary intelligence to oversee and optimize RAN resources effectively.
 
-![Figure 1: Logical Architecture of Open RAN](asset/arcj.PNG)
-Figure 1: Logical Architecture of Open RAN.
+![Logical Architecture of Open RAN](asset/arch.PNG).
+
+       Figure 1: Logical Architecture of Open RAN.
+
+**2.5.1 Service Management and Orchestration (SMO)**
+Service Management and Orchestration (SMO) is a functional area in the ORAN architecture [figure 1] that is responsible for managing and orchestrating services and applications across the RAN network. The SMO layer is designed to work in conjunction with other functional areas, such as the Management and Orchestration (MANO) layer and the Network Slicing Function (NSF) layer, to ensure that services and applications are deployed and managed effectively.
+
+The Service Management and Orchestration (SMO) layer within the O-RAN architecture plays a crucial role in enabling the non-RT RIC to access specific functionalities related to RAN optimization actions, such as collecting Performance Measurements (PM) through O1 and O2 interfaces. However, SMO also has a much broader mandate, including the orchestration of the Network Functions Virtualization Infrastructure (NFVI) and managing the lifecycle of ORAN network elements, which can be either Virtual Network Functions (VNFs) hosted in specific locations of the O-Cloud infrastructure or Physical Network Functions (PNFs) exposed by cell sites.
+
+For non-virtualized parts, such as O-RU functionalities that are related to area coverage and must be placed at cell sites, the SMO supports the deployment of physical network elements on dedicated physical resources with management through the O1 interface. However, for virtualized network elements, the SMO has the capability to interact with the O-Cloud to perform network element lifecycle management. For example, it can instantiate the virtualized network element on the target infrastructure through the O2 interface or indicate the selected geo-location for each VNF to be instantiated.
+
+To ensure smooth communication between the deployed network elements, the SMO is also responsible for IP addressing, network reconfiguration, and system updates. To support a range of deployment solutions, the Operation and Maintenance architecture defined by O-RAN describes in detail the requirements necessary for the SMO framework to be provided by third-party Network Management Systems (NMS) or orchestration platforms, such as the Linux Foundation’s Open Network Automation Platform (ONAP).
+
+Overall, the Service Management and Orchestration framework is a critical component of the O-RAN architecture, providing a standardized interface and protocols for managing and orchestrating services and applications across the RAN network. With its ability to interact with both virtualized and physical network elements, the SMO enables greater 
+ nteroperability, flexibility, and efficiency, ultimately benefiting both network operators and end-users.
+
+**2.5.2 near-real time RAN Intelligent Controller (near-RT RIC)**
+In the O-RAN architecture [figure 1], the near-RT RIC, or near-real-time RAN Intelligent Controller, serves as a crucial function for enabling real-time control and optimization of O-RAN resources via fine-grained data collection and actions through the E2 interface. 
+
+Figure 2 shows the logical architecture and interfaces of the near-RT RIC. The near-RT RIC is connected to the non-RT RIC through the A1 interface. A1 interface work for policy-based guidance.
+
+Now the E2 is a logical interface that connects the near-RT RIC with an E2 node. The O-CU-CP, O-CU-UP, O-DU, and O-eNB are connected with the near-RT RIC. Only one E2 node will be connected with near-RT RIC, and multiple E2 nodes will be connected with E2 nodes, i.e., multiple O-CU, O-DU, and O-eNBs. The F1 and E1 are logical 3GPP interfaces.
+
+![O-RAN architecture overview showing Near-RT RIC interfaces:](asset/arch2.PNG).
+
+          Figure 2: O-RAN architecture overview showing Near-RT RIC interfaces
+          
+Additionally, the Near-RT RIC serves as a host for multiple xApps that collect real-time information and provide extra services using the E2 interface. It can receive policies and obtain data enrichment information through the A1 interface. The E2 interface protocols are based on control plane protocols. In the event of an E2 or Near-RT RIC failure, the E2 Node can still offer services, but certain value-added services exclusive to the Near-RT RIC may experience an outage.
+
+• Near-RT RIC Requirements: The Near-RT RIC architecture is expected
+to meet the following set of requirements:
+
+– Each E2 node configured to directly supply RIC services to the Near-RT RIC must be uniquely identified via the dedicated E2 connection that the Near-RT RIC uses.
+
+– A fact Several E2 nodes that each support a different RAT type may be able to establish E2 connections with near-RT RIC.
+
+– The Near-RT RIC is in charge of requesting from the E2 Nodes a list of the functions that provide RIC services and their related E2 service models.
+
+– The Near-RT RIC hosts a set of applications known as xApps. Each xApp can target specific RAN functions within a specific E2 node.
+
+– The Near-RT RIC, like other network elements, should provide an O1 interface to the Service Management Orchestration layer. This interface makes element administration and onfiguration easier.
+
+– The Near-RT RIC should provide an A1 interface to the Non-RT RIC, allowing for the exchange of policies that can affect the behavior of the Near-RT RIC and its hosted xApps, influencing the behavior of E2 Nodes.
+
+– In the event of an E2 interface or Near-RT RIC failure, the E2 nodes ought to be able to function without the Near-RT RIC.
+
+– The 10 ms to 1 s latency requirements for near-real-time optimization should be met by the Near-RT RIC.
+
+• Near-RT RIC functions: Following functions are supported by near-
+RT RIC:
+
+– Termination of the A1 interface: First, terminate the interface from a non-RT RIC. After that, forward the A1 messages.
+
+– Termination of the O1 interface: In order to send management messages to the Near-RT RIC management function, the O1 interface from the Service Management Orchestration layer terminates at the Near-RT RIC.
+
+– Termination of E2 interface: The Near-RT RIC terminates the E2 interface from an E2 Node, directing xApp-related messages to the intended xApp and non xApp-related messages to the E2 Manager.
+
+– xApps host: The Near-RT RIC enables the execution of RRM control functionalities within its domain and enforces them in the E2 Nodes through the E2 interface. It also initiates xApp-related transactions over the E2 interface and handles the corresponding responses received from the E2 interface.
+
+**2.5.3 non-real time RAN Intelligent Controller (non-RT-RIC))**
+The non-RT RIC, or non-real-time RAN Intelligent Controller, is responsible for non-real-time control and optimization of RAN resources, including AI/ML workflows such as model training and updates and policy-based guidance of applications/features in the near-RT RIC. [Figure 3] demonstrating the interface and services of non-real time RIC.
+
+![Non-RT RIC reference Architecture](asset/arch3.PNG)
+
+        Figure 3: Non-RT RIC reference Architecture
+        
