@@ -21,7 +21,7 @@ In Chapter 3, possible solutions with an environment for the deployment of virtu
 
 Next, Chapter 4 will describe the steps to connect RIC components and create a service between them. In addition, in the result section, there is a Wireshark capture and analysis of packets.
 
-# 2 O-RAN Alliance and O-RAN Ecosystem
+## 2 O-RAN Alliance and O-RAN Ecosystem
 **2.1 O-RAN Alliance Overview**
 
 The O-RAN Alliance was established with the primary objective of advancing openness and intelligence within the Radio Access Network (RAN) industry. Since its inception, the alliance has garnered significant momentum, attracting over 200 members, including major mobile operators, network equipment vendors, and system integrators.
@@ -247,7 +247,7 @@ The RIC architecture also includes other key elements such as O-CU, O-CUCP, O-CU
 
 RIC architecture also includes an O1 interface between management entities in the Service Management and Orchestration Framework and O-RAN managed elements. The O1 interface is used for operation and management, through which FCAPS management, software management, file management, and other operations are achieved.
 
-**3 RIC Environment Set-up and Deployment**
+## 3 RIC Environment Set-up and Deployment
 **3.1 Infrastructure Preparation and Deployment of near- RT RIC.**
 
 Hardware Requirements:
@@ -1213,7 +1213,7 @@ Figure 7: Non-RT RIC Enrichment information Coordinator.
 
 Now, on the coordinator page [Figure 7], there is also an option to create jobs for further work.
 
-**4 Testing and Analysis**
+## 4 Testing and Analysis
 
 **4.1 Connection set-up.**
 
@@ -1627,46 +1627,59 @@ Figure 10: Packets after creating Policy 21003
 Now the [Figure 11] is about the transferred packet. Here, packet number 87806 is a transfer from non-RT RIC to near-RT RIC, which is a policy packet.
 
 ![Policy Packet (HTTP/JSON Protocol)](asset/arch11.PNG)
+
 Figure 11: Policy Packet (HTTP/JSON Protocol)
 
+This packet was transferred through the HTTP/JSON protocol. Application/ json file presenting the data, and the policy name is 21003, which we have seen before in the RIC control 
+ anel. Here in the JavaScript Object Notation section, there is an option with the name ”array. This array contains a path and a member with the value 21003.
 
 
-```bash
-./ install
-```
-```bash
-./ install
-```
+**4.4 Follow-up opportunities**
+Currently, the system is not prepared to connect with the 5G core network as it solely encompasses RIC components. However, the development of other components is underway, and once completed, the system will be ready for integration with the 5G core network. The O-RAN Alliance is actively involved in the development of these additional components, providing open-source implementation resources through their published releases. As part of future work, the focus will be on deploying these forthcoming components and establishing the necessary connections between them and the 5G core network. This ongoing effort will pave the way for a comprehensive and fully functional system that leverages the capabilities of the 5G core network.
 
-```bash
-./ install
-```
-```bash
-./ install
-```
-```bash
-./ install
-```
+**4.5 Challenges**
+Infrastructure Requirements: Setting up Non-RT RIC and Near-RT RIC involves configuring complex infrastructure. This includes deploying the necessary hardware, networking components, and virtualization platforms and hypervisors. Ensuring that the infrastructure meets the specific requirements of these components can be a time-consuming and intricate process.
 
-```bash
-./ install
-```
-```bash
-./ install
-```
+**Software Dependencies:** Non-RT RIC and Near-RT RIC rely on various software dependencies, such as operating systems, container runtimes, and orchestration frameworks. Ensuring compatibility between these dependencies and the target deployment environment can be challenging, requiring careful selection and configuration of software versions. 
 
+Overall,installing Non-RT RIC and Near-RT RIC can be challenging because it involves dealing with technical complexities, infrastructure considerations, software dependencies, and optimization requirements. It requires expertise and careful attention to detail to ensure a successful and functional deployment.
 
-```bash
-./ install
-```
+## 5 Conclusion
 
-```bash
-./ install
-```
+This research project explores the initiatives of the O-RAN Alliance group, which focuses on software-based solutions for open and programmable radio access networks. The O-RAN Alliance group aims to establish a reference design that offers operators and service providers a unified approach to deploying disaggregated and software-defined 5G RANs. 
+ dditionally, the collaboration between O-RAN and the Linux Foundation has resulted in the development of initial software releases and documentation, serving as a prototype platform for further RAN software advancements.
+ 
+ The objective of this project was to deploy developed components of ORAN in a specific radio access network intelligent controller part over a virtualization infrastructure to investigate the capabilities of those components as well as test their connectivity. Additionally, the study aimed to evaluate the crucial role of Kubernetes in orchestrating 
+containerized applications. To achieve these objectives, the approach taken in this research project primarily revolved around practical aspects, demonstrating the deployment of specific O-RAN software components in a customized virtual environment.
 
-```bash
-./ install
-```
+Despite the initial challenges, the project managed to deploy non-RT RIC, near-RT RIC, and xApp components successfully. Basic performance evaluations were conducted to assess their performance. The connectivity between the two RICs was established, allowing effective communication. Furthermore, the creation of policies was accomplished without any issues, enhancing the overall functionality of the deployed components. These achievements demonstrate significant progress in implementing the desired functionalities and capabilities of the system. The positive outcomes from the performance evaluations provide a solid foundation for further optimization and fine-tuning of the components, ensuring optimal performance
+in real-world scenarios.
 
+In summary, the procedural steps taken in this research project can be seen as a starting point for further exploration into the feasibility of deploying O-RAN software. These steps provide a basic framework for assessing the deployment process, which can be adapted and expanded upon as the software components continue to evolve.
 
+## 6 Abbreviations
 
+RAN = Radio Access Network.
+O-RAN = Open Radio Access Network.
+RIC = RAN Intelligent Controller.
+SMO = Service Management and Orchestration.
+NSF = Network Slicing Function.
+MANO= Management and Orchestration.
+NFVI = Network Functions Virtualization Infrastructure.
+VNFs = Virtual Network Functions.
+PNFs = Physical Network Functions.
+NMS = Network Management Systems.
+O-CU = O-RAN Central Unit.
+O-CU-CP = O-RAN Central Unit in control plane.
+O-CU-UP = O-RAN Central Unit in user plane.
+O-DU = O-RAN Distributed Unit.
+O-RU = O-RAN Radio Unit.
+RRC = Radio Resource Control.
+SDAP = Service Data Adaptation Protocol.
+PDCP = Packet Data Convergence Protocol.
+ONAP = Open Network Automation Platform.
+CNI = Container Network Interface
+RF = Radio Frequency.
+MAC = Media Access Control Address.
+RLC = Radio link control.
+FCAPS = fault, configuration, accounting, performance, and security.
