@@ -1209,48 +1209,428 @@ In policy control, policy, policy type, and RIC configuration [Figure 6] will ap
 
 ![Non-RT RIC Enrichment information Coordinator](asset/arch7.PNG)
 
-Figure 7: Non-RT RIC Enrichment information Coordinator
+Figure 7: Non-RT RIC Enrichment information Coordinator.
+
+Now, on the coordinator page [Figure 7], there is also an option to create jobs for further work.
+
+**4 Testing and Analysis**
+
+**4.1 Connection set-up.**
+
+To build the connection between near-RT RIC and non-RT RIC we need to follow a few steps. Which is guided by the software community of o-ran Alliance.
+
+Assign external IP to near and non RT RIC services: To connect a near-RT RIC with a non-RT RIC platform, it is mandatory to assign an external IP address to all components of both RIC.
+
+For near-RT RIC The following command will set an external IP:
+
+```bash
+kubectl patch svc " service -ricplt - a1mediator - http " -n "
+ricplt " -p '{" spec ":{" externalIPs ":["139.6.19.30"]}} '
+```
+
+After running the command, we can see that the external IP assigned or not with the following command:
+
+```bash
+kubectl get services -n ricplt
+```
+
+Output:
+
+```bash
+root@srv6 :/ home /o- ran # kubectl get services -n ricplt
+NAME TYPE CLUSTER -IP EXTERNAL -IP PORT (S)
+aux - entry ClusterIP 10.105.132.177 139.6.19.30 80/ TCP
+,443/ TCP
+r4 - infrastr NodePort 10.98.2.131 139.6.19.30
+32080:32080/ TCP ,32443
+uctur -kong - proxy
+r4 - infrastructu ClusterIP 10.100.7.125 139.6.19.30 80/ TCP
+re - prometheus - alertmanager
+r4 - infrastruct ClusterIP 10.105.33.31 139.6.19.30 80/ TCP
+ure - prometheus - server
+service - ricplt ClusterIP 10.102.109.89 139.6.19.30 10000/
+TCP
+-a1mediator - http
+service - ricplt ClusterIP 10.96.120.158 139.6.19.30 4561/
+TCP ,4562/ TCP
+-a1mediator -rmr
+service - ricplt ClusterIP 10.105.220.145 139.6.19.30 8080/
+TCP
+-alarmanager - http
+service - ricplt ClusterIP 10.107.6.137 139.6.19.30 4560/
+TCP ,4561/ TCP
+-alarmanager - rmr
+service - ricplt ClusterIP 10.100.8.154 139.6.19.30 8080/
+TCP
+-appmgr - http
+service - ricplt ClusterIP 10.102.179.240 139.6.19.30 4561/
+TCP ,4560/ TCP
+-appmgr - rmr
+service - ricplt ClusterIP None 139.6.19.30 6379/
+TCP
+-dbass -tcp
+service - ricplt ClusterIP 10.109.47.153 139.6.19.30 3800/
+TCP
+-e2mgr - http
+service - ricplt ClusterIP 10.108.234.78 139.6.19.30 4561/
+TCP ,3801/ TCP
+-e2mgr -rmr
+service - ricplt ClusterIP 10.96.118.19 139.6.19.30 8088/
+TCP
+-e2term - prometheus - alpha
+service - ricplt ClusterIP 10.102.139.254 139.6.19.30 4561/
+TCP ,38000/ TCP
+-e2term -rmr - alpha
+service - ricplt NodePort 10.102.107.2 139.6.19.30
+36422:32222/ SCTP
+-e2term -sctp - alpha
+service - ricplt ClusterIP 10.111.228.73 139.6.19.30 9001/
+TCP ,8080/ TCP ,3000/ TCP
+-o1mediator - http
+service - ricplt NodePort 10.108.87.21 139.6.19.30
+830:30830/ TCP
+-o1mediator -tcp - netconf
+service - ricplt ClusterIP 10.109.105.95 139.6.19.30 3800/
+TCP
+-rtmgr - http
+service - ricplt ClusterIP 10.105.222.135 139.6.19.30 4561/
+TCP ,4560/ TCP
+-rtmgr -rmr
+service - ricplt ClusterIP None 139.6.19.30 3800/
+TCP
+-submgr - http
+service - ricplt ClusterIP None 139.6.19.30 4560/
+TCP ,4561/ TCP
+-submgr - rmr
+service - ricplt ClusterIP 10.100.198.129 139.6.19.30 8080/
+TCP ,9095/ TCP
+-vespamgr - http
+```
+
+In the output of the kubectl services, it shows all pods are assigned an external IP of ”139.6.19.30”.
+
+For non-RT RIC Now we will asigned external IP for non-RT RIC and in this case IP is ”139.6.19.26”. 
+
+The following command will set an external IP:
 
 
 ```bash
-./ install
+kubectl patch svc " service -ricplt - a1mediator - http " -n "
+ricplt " -p '{" spec ":{" externalIPs ":["139.6.19.29"]}} '
 ```
+
+To check if it works or not, run the following command:
+
 ```bash
-./ install
+kubectl ger services -n nonrtric
 ```
+
+Output:
+
 ```bash
-./ install
+root@srv5 ;/ home /o- ran # kubectl get po -n nonrtric
+NAME TYPE CLUSTER -IP EXTERNAL -IP PORT (S)
+a1 -sim -std2 -0 ClusterIP 10.152.183.167 139.6.19.29 8085/ TCP
+,8185/ TCP
+helmmanager ClusterIP 10.152.183.29 139.6.19.29 8112/ TCP
+topology NodePort 10.152.183.220 139.6.19.29
+3001:32001/ TCP
+a1 -sim -osc -1 ClusterIP 10.152.183.127 139.6.19.29 8085/ TCP
+,8185/ TCP
+a1 -sim -osc -0 ClusterIP 10.152.183.224 139.6.19.29 8085/ TCP
+,8185/ TCP
+a1 -sim -std -0 ClusterIP 10.152.183.44 139.6.19.29 8085/ TCP
+,8185/ TCP
+information ClusterIP 10.152.183.51 139.6.19.29 9082/ TCP
+,9083/ TCP
+service
+a1 -sim -std -1 ClusterIP 10.152.183.178 139.6.19.29 8085/ TCP
+,8185/ TCP
+oran - nonrtric NodePort 10.152.183.205 139.6.19.29
+8444:30634/ TCP
+-kong - admin
+dmaapadapter ClusterIP 10.152.183.136 139.6.19.29 9087/ TCP
+,9088/ TCP
+service
+controlpanel NodePort 10.152.183.174 139.6.19.29
+8182:30091/ TCP ,8082:30092/ TCP
+a1 -sim -std -1 ClusterIP 10.152.183.71 139.6.19.29 8085/ TCP
+,8185/ TCP
+oran - nonrtric LoadBal .. 10.152.183.232 139.6.19.29 80:30742/
+TCP ,443:32516/ TCP
+-kong - proxy
+oru - app NodePort 10.152.183.207 139.6.19.29
+830:30835/ TCP
+oran - nonrtric ClusterIP 10.152.183.149 139.6.19.29 80/ TCP
+-odu - app
+nonrtricgatew NodePort 10.152.183.13 139.6.19.29
+9090:30093/ TCP
+dmaapmediatore ClusterIP 10.152.183.60 139.6.19.29 8085/ TCP
+,8185/ TCP
+service
+oran - nonrtric - ClusterIP 10.152.183.14 139.6.19.29 8095/ TCP
+odu -app - ics
+-version
+rappcatalogue ClusterIP 10.152.183.251 139.6.19.29 9085/ TCP
+,9086/ TCP
+service
 ```
+
+Now it shows that external IPs are assigned, and now both RIC are able to communicate with both of them.
+
+**4.2 Create Policy.**
+The following steps will show the process of creating a policy. Edit application configuration.json file (non-rt ric): Run the following to edit this json file:
+
 ```bash
-./ install
+sudo vim /var / nonrtric /pms - storage / application \
+_configuration . json
 ```
+
+Edit this json file by using the following codes:
+
 ```bash
-./ install
+{
+" config ": {
+" controller ": [
+{
+" name ": " controller1 ",
+" baseUrl ": " https :// sdnc . onap :8443" ,
+" userName ": " admin ",
+" password ": "
+Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U "
+}
+],
+" ric ": [
+{
+" name ": "ric - testing ",
+" baseUrl ": " http :// $NONRTRIC_IP :10000" ,
+" customAdapterClass ": " org . onap . ccsdk . oran .
+a1policymanagementservice . clients . OscA1Client ",
+" managedElementIds ": [
+" kista_1 ",
+" kista_2 "
+]
+}
+],
+" streams_publishes ": {
+" dmaap_publisher ": {
+" type ": " message_router ",
+" dmaap_info ": {
+" topic_url ": " http :// message - router :3904/ events /A1
+- POLICY -AGENT - WRITE "
+}
+}
+},
+" streams_subscribes ": {
+" dmaap_subscriber ": {
+" type ": " message_router ",
+" dmaap_info ": {
+" topic_url ": " http :// message - router :3904/ events /A1
+- POLICY -AGENT - READ / users / policy - agent ? timeout =15000& limit
+=100"
+}
+}
+}
+}
+}
 ```
+
+Now, if we go to the non-RT RIC control panel, we will see that the configuration is updated perfectly.
+
+![RIC configuration updates.](asset/arch8.PNG)
+
+Figure 8: RIC configuration updates.
+
+[Figure 8] is the non-RT RIC control panel. Now reload the page, and we
+will see that the RIC configuration is updated with the application file.
+
+**Create a policy in non-RT RIC and ONAP components installation:**
+
+To create a policy, we need to update the policy schema file. This file
+is provided by default. Apart from that, ONAP has developed a policycreating
+platform. So, before we create policies, we need to set up a few
+dependencies, which are provided by ONAP. Run the following command
+to deploy Helm for ONAP services.
+
 ```bash
-./ install
+helm deploy \
+--debug onap local / onap \
+-- namespace onap \
+-f / root / dep /smo - install /helm - override / default /onap -
+override . yaml \
+--set global . persistence . mountPath ="/ dockerdata -nfs/
+deployment - $timestamp " \
+--set dmaap . message - router . message - router - zookeeper .
+persistence . mountPath ="/ dockerdata - nfs / deployment -
+$timestamp " \
+--set dmaap . message - router . message - router - kafka .
+persistence . mountPath ="/ dockerdata - nfs / deployment -
+$timestamp "
 ```
+
+Now non-rt ric is ready to create policy. First we need to edit policy
+schema ratecontrol.json file by replacing following script.
+
 ```bash
-./ install
+{
+" name ": " Policy for Rate Control ",
+" policy_type_id ":21003 ,
+" description ":" This policy is associated with rate control .
+Entities which support this policy type must accept the
+following policy inputs (see the payload for more specifics
+) : class , which represents the class of traffic for which
+the policy is being enforced ",
+" create_schema ":{
+" $schema ":" http :// json - schema . org /draft -07/ schema #",
+" type ":" object ",
+" additionalProperties ": false ,
+" required ":[" class "],
+" properties ":{
+" class ":{
+" type ":" integer ",
+" minimum ":1 ,
+" maximum ":256 ,
+" description ":" integer id representing class to
+which we are applying policy "
+},
+" enforce ":{
+" type ":" boolean ",
+" description ": " Whether to enable or disable
+enforcement of policy on this class "
+},
+" window_length ":{
+" type ":" integer ",
+" minimum ":15 ,
+" maximum ":300 ,
+" description ":" Sliding window length in seconds "
+},
+" trigger_threshold ":{
+" type ":" integer ",
+" minimum ":1
+},
+" blocking_rate ":{
+" type ":" number ",
+" minimum ":0 ,
+" maximum ":100
+}
+}
+},
+" downstream_schema ":{
+" type ":" object ",
+" additionalProperties ": false ,
+" required ":[" policy_type_id ", " policy_instance_id ", "
+operation "],
+" properties ":{
+" policy_type_id ":{
+" type ":" integer ",
+" enum ":[21000]
+},
+" policy_instance_id ":{
+" type ":" string "
+},
+" operation ":{
+" type ":" string ",
+" enum ":[" CREATE ", " UPDATE ", " DELETE "]
+},
+" payload ":{
+" $schema ":" http :// json - schema . org /draft -07/
+schema #",
+" type ":" object ",
+" additionalProperties ": false ,
+" required ":[" class "],
+" properties ":{
+" class ":{
+" type ":" integer ",
+" minimum ":1 ,
+" maximum ":256 ,
+" description ":" integer id representing
+class to which we are applying policy "
+},
+" enforce ":{
+" type ":" boolean ",
+" description ": " Whether to enable or
+disable enforcement of policy on this class "
+},
+" window_length ":{
+" type ":" integer ",
+" minimum ":15 ,
+" maximum ":300 ,
+" description ":" Sliding window length in
+seconds "
+},
+" trigger_threshold ":{
+" type ":" integer ",
+" minimum ":1
+},
+" blocking_rate ":{
+" type ":" number ",
+" minimum ":0 ,
+" maximum ":100
+}
+}
+}
+}
+},
+" notify_schema ":{
+" type ":" object ",
+" additionalProperties ": false ,
+" required ":[" policy_type_id ", " policy_instance_id ", "
+handler_id ", " status "],
+" properties ":{
+" policy_type_id ":{
+" type ":" integer ",
+" enum ":[21000]
+},
+" policy_instance_id ":{
+" type ":" string "
+ },
+" handler_id ":{
+" type ":" string "
+},
+" status ":{
+" type ":" string ",
+" enum ":[" OK", " ERROR ", " DELETED "]
+}
+}
+}
+}
+
 ```
+
+Now curl this file, and once it’s done, a policy will be created, and to see the policy, we need to go to policy control on the RIC platform: For that, first run the following command to create a policy:
+
 ```bash
-./ install
+curl -X PUT " http :// localhost /a1 -p/ policytypes /21003/" -H
+" Content - Type : application / json " -d @policy \ _schema \
+_ratecontrol . json
 ```
+
+
+
 ```bash
-./ install
+Now go to the non-RT RIC control panel and enter the option policy type bar. Refresh the page, and we will see that the policy has been created. In my case, the policy name is 21003 [Figure 9]
 ```
-```bash
-./ install
-```
-```bash
-./ install
-```
-```bash
-./ install
-```
-```bash
-./ install
-```
+![Created Policy 21003](asset/arch9.PNG)
+
+Figure 9: Created Policy 21003
+
+**4.3 Result.**
+In the next step, we need to acknowledge the significance of the policy created earlier. This policy represents the connection between the entities involved. With the policy in place, data packets will be transferred between them. To understand this data transfer better, we will use Wireshark. Wireshark captures and analyzes the packets exchanged duringommunication. It helps us examine the contents, protocols, and interactions within the captured packets. By analyzing the packet captures, we can gather information such as source and destination addresses, timing, headers, and payload contents. We can also identify any issues or errors that may occur during the data exchange. Using Wireshark, we can alidate the expected behavior, troubleshoot problems, and ensure the smooth and secure transmission of data packets between the components. Wireshark provides valuable insights into the network traffic, helping us understand the communication process between the entities involved.
+
+**4.3.1 Wireshark Capture and Analysis.**
+In the following Wireshark [Figure 10] capture, we will see that near-RT RIC and non-RT RIC transferring packets. Here, 139.6.19.30 is for near- RT RIC and 139.6.19.29 is for non-RT RIC platforms.
+
+![Packets after creating Policy 21003](asset/arch10.PNG)
+
+Figure 10: Packets after creating Policy 21003
+
+Now the [Figure 11] is about the transferred packet. Here, packet number 87806 is a transfer from non-RT RIC to near-RT RIC, which is a policy packet.
+
+![Policy Packet (HTTP/JSON Protocol)](asset/arch11.PNG)
+Figure 11: Policy Packet (HTTP/JSON Protocol)
+
+
+
 ```bash
 ./ install
 ```
